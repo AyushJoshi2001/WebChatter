@@ -4,7 +4,7 @@ const User = require('../models/userModel');
 const getProfile = asyncHandler(async (req, res, next) => {
     console.log('getProfile is called');
 
-    const userEmail = req.headers.loggedInUserEmail;
+    const userEmail = req.user?.email;
     const user = await User.findOne({ email : userEmail }, { password: 0 });
     if(!user) {
         res.status(400).json('User not found.');
@@ -28,8 +28,13 @@ const searchUser = asyncHandler(async (req, res, next) => {
         $or: [
             {'email': { $regex: '^' + searchKey, $options:'i' }}, 
             {'name': { $regex: '^' + searchKey, $options:'i' }}
-        ]}, 
-        { password:0 })
+        ]})
+        .find({
+            email: {
+                $ne: req.user?.email
+            }
+        })
+        .select('-password')
         .skip((pageNo-1)*pageSize)
         .limit(pageSize);
         
