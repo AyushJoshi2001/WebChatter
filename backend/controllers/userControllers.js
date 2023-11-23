@@ -36,4 +36,7 @@ const searchUser = asyncHandler(async (req, res, next) => {
     res.status(200).json(users);
 })
 
-module.exports = { getProfile, searchUser }
+module.exports = { 
+    getProfile, 
+    searchUser 
+}
