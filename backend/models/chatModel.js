@@ -1,6 +1,4 @@
 const mongoose = require('mongoose');
-const User = require('./userModel');
-const Message = require('./messageModel');
 
 const chatSchema = mongoose.Schema(
     {
@@ -14,15 +12,15 @@ const chatSchema = mongoose.Schema(
         },
         participants: [{
             type: mongoose.Schema.Types.ObjectId,
-            ref: User
+            ref: 'User'
         }],
         latestMessage: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: Message
+            ref: 'Message'
         },
         groupAdmin: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: User
+            ref: 'User'
         },
         createdAt: {
             type: Date,
