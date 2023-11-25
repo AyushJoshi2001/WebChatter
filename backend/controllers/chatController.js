@@ -30,7 +30,7 @@ const accessChat = asyncHandler(async (req, res, next) => {
         select: 'name email profileImg'
     });
 
-    if(chatData.length>0) {
+    if(chatData && chatData.length>0) {
         res.status(200).json(chatData[0]);
     } else {
         let chatData = {
@@ -58,22 +58,140 @@ const fetchChats = asyncHandler(async (req, res, next) => {
 
 const createGroupChat = asyncHandler(async (req, res, next) => {
     console.log('createGroupChat is called');
+    
+    const groupMembers = req.body.groupMembers;
+    const groupName = req.body.groupName;
+    if(!groupMembers || groupMembers.length<2) {
+        res.status(400).json('Atleast 3 member needed to create a group chat');
+    }
+    if(!groupName) {
+        res.status(400).json('Group name not found');
+    }
 
+    let groupChatDetails = {
+        chatName: groupName,
+        isGroupChat: true,
+        participants: groupMembers,
+        groupAdmin: req.user._id
+    }
+
+    const groupChatCreated = await Chat.create(groupChatDetails);
+    const getNewlyCreatedGroup = await Chat.find({ _id : groupChatCreated?._id })
+    .populate('participants', '-password')
+    .populate('groupAdmin', '-password');
+    
+    res.status(200).json(getNewlyCreatedGroup);
 })
 
 const renameGroup = asyncHandler(async (req, res, next) => {
     console.log('renameGroup is called');
+    
+    const groupId = req.body.groupId;
+    const groupName = req.body.groupName;
 
+    if(!groupId) {
+        res.status(400).json('GroupId is missing');
+    }
+    if(!groupName) {
+        res.status(400).json('Group Name is missing');
+    }
+
+    const getGroupDetails = await Chat.find({ _id: groupId });
+    if(!getGroupDetails || getGroupDetails.length===0) {
+        res.status(400).json('Group not found');
+    }
+
+    let updateGroupDetails = await Chat.findOneAndUpdate({ _id: groupId, isGroupChat: true, groupAdmin: req.user._id }, { chatName: groupName }, { new: true });
+    if(!updateGroupDetails) {
+        res.status(400).json('Something went wrong');
+    }
+    updateGroupDetails = await Chat.populate(updateGroupDetails,[
+        {
+            path: 'participants',
+            select: '-password'
+        },
+        {
+            path: 'groupAdmin',
+            select: '-password'
+        }
+    ]);
+
+    res.status(200).json(updateGroupDetails);
 })
 
 const removeFromGroup = asyncHandler(async (req, res, next) => {
     console.log('removeFromGroup is called');
 
+    const userId = req.body.userId;
+    const groupId = req.body.groupId;
+    if(!userId) {
+        res.status(400).json('userId is missing');
+    }
+    if(!groupId) {
+        res.status(400).json('groupId is missing');
+    }
+
+    let removeMemberFromGroup = await Chat.findOneAndUpdate(
+        { _id: groupId, isGroupChat: true, groupAdmin: req.user._id }, 
+        { $pull: { participants: userId } }, { new: true }
+    );
+
+    if(!removeMemberFromGroup) {
+        res.status(400).json('Something went wrong');
+    }
+
+    removeMemberFromGroup = await Chat.populate(removeMemberFromGroup,[
+        {
+            path: 'participants',
+            select: '-password'
+        },
+        {
+            path: 'groupAdmin',
+            select: '-password'
+        }
+    ]);
+
+    res.status(200).json(removeMemberFromGroup);
 })
 
 const addToGroup = asyncHandler(async (req, res, next) => {
     console.log('addToGroup is called');
 
+    const userId = req.body.userId;
+    const groupId = req.body.groupId;
+    if(!userId) {
+        res.status(400).json('userId is missing');
+    }
+    if(!groupId) {
+        res.status(400).json('groupId is missing');
+    }
+
+    const userDetails = await User.find({ _id: userId });
+    if(!userDetails || userDetails.length===0) {
+        res.status(400).json('User not found');
+    } 
+
+    let addMemberToGroup = await Chat.findOneAndUpdate(
+        { _id: groupId, isGroupChat: true, groupAdmin: req.user._id }, 
+        { $addToSet: { participants: userId } }, { new: true }
+    );
+
+    if(!addMemberToGroup) {
+        res.status(400).json('Something went wrong');
+    }
+
+    addMemberToGroup = await Chat.populate(addMemberToGroup,[
+        {
+            path: 'participants',
+            select: '-password'
+        },
+        {
+            path: 'groupAdmin',
+            select: '-password'
+        }
+    ]);
+
+    res.status(200).json(addMemberToGroup);
 })
 
 module.exports = { 

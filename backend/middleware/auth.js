@@ -5,7 +5,7 @@ const User = require('../models/userModel');
 const authorizeUser = asyncHandler(async (req, res, next) => {
     console.log('auth running');
 
-    if(req.headers.authorization.includes('Bearer ')) {
+    if(req.headers.authorization && req.headers.authorization.includes('Bearer ')) {
 
         // authorize jwt token and verify user exist in the db.
         let authToken = req.headers.authorization;

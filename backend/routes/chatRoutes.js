@@ -4,10 +4,10 @@ const { authorizeUser } = require('../middleware/auth');
 const router = express.Router();
 
 router.post('/', authorizeUser, accessChat);
-router.get('/fetchChat', authorizeUser, fetchChats);
-router.post('/createGroupChat', authorizeUser, createGroupChat);
-router.post('/renameGroup', authorizeUser, renameGroup);
-router.put('/removeFromGroup', authorizeUser, removeFromGroup);
-router.put('/addToGroup', authorizeUser, addToGroup);
+router.get('/fetch', authorizeUser, fetchChats);
+router.post('/createGroup', authorizeUser, createGroupChat);
+router.put('/renameChat', authorizeUser, renameGroup);
+router.put('/remove', authorizeUser, removeFromGroup);
+router.put('/add', authorizeUser, addToGroup);
 
 module.exports = router;
