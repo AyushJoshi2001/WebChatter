@@ -54,6 +54,18 @@ const accessChat = asyncHandler(async (req, res, next) => {
 const fetchChats = asyncHandler(async (req, res, next) => {
     console.log('fetchChats is called');
 
+    let chats = await Chat.find({ participants: { $elemMatch: { $eq: req.user._id } } })
+        .populate('participants', '-password')
+        .populate('latestMessage')
+        .populate('groupAdmin', '-password')
+        .sort({ updatedAt: -1 });
+
+    chats = await Chat.populate(chats, {
+        path: 'latestMessage.sender',
+        select: 'name email profileImg'
+    });
+
+    res.status(200).json(chats);
 })
 
 const createGroupChat = asyncHandler(async (req, res, next) => {

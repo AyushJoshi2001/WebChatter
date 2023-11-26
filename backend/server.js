@@ -7,7 +7,11 @@ const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes');
 const chatRoutes = require('./routes/chatRoutes');
 
-mongoose.connect(process.env.MONGODB_DATABASE_URI);
+mongoose.connect(process.env.MONGODB_DATABASE_URI).then(() => {
+  console.log('Connected to the database');
+}).catch(err => {
+  console.log('Error during database connection => ', err);
+});
 
 app.use(bodyParser.json());
 app.use('/api/auth', authRoutes);
