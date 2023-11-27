@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/userModel');
 
 const authorizeUser = asyncHandler(async (req, res, next) => {
-    console.log('auth running');
+    console.log('authorizeUser is called');
 
     if(req.headers.authorization && req.headers.authorization.includes('Bearer ')) {
 
