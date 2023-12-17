@@ -3,9 +3,9 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start-frontend": "cd frontend && ng serve --open",
-    "start-backend": "node backend/server.js",
-    "start-dev-backend": "nodemon backend/server.js"
+    "frontend": "cd frontend && ng serve --open",
+    "backend": "node backend/server.js",
+    "dev-backend": "nodemon backend/server.js"
   },
   "dependencies": {
     "bcrypt": "^5.1.1",
