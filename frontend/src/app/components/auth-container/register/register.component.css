@@ -76,3 +76,23 @@ form {
 .link {
   text-decoration: none;
 }
+
+::ng-deep .register .mat-mdc-dialog-container .mdc-dialog__surface {
+  border-radius: 1.5rem !important;
+}
+
+.sm-button {
+  cursor: pointer;
+  background-color: #3072b8;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  outline: none;
+  border: none;
+  box-shadow: 2px 4px 10px gray;
+  color: white;
+  font-size: 1rem;
+}
+
+::ng-deep .register-backdrop {
+  backdrop-filter: blur(4px) !important;
+}

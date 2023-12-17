@@ -7,6 +7,7 @@ const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes');
 const chatRoutes = require('./routes/chatRoutes');
 const messageRoutes = require('./routes/messageRoutes');
+const allowCrossDomain = require('./utils/corsHandler');
 
 mongoose.connect(process.env.MONGODB_DATABASE_URI).then(() => {
   console.log('Connected to the database');
@@ -15,6 +16,7 @@ mongoose.connect(process.env.MONGODB_DATABASE_URI).then(() => {
 });
 
 app.use(bodyParser.json());
+app.use('*', allowCrossDomain);
 app.use('/api/auth', authRoutes);
 app.use('/api/user', userRoutes);
 app.use('/api/chat', chatRoutes);

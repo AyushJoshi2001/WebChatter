@@ -36,7 +36,9 @@ const registerUser = asyncHandler(async (req, res) => {
     // save details to DB.
     const user = new User({name: name, email: email, password: encryptedPassword});
     const savedUser = await user.save();
-    res.status(200).json(savedUser);
+    let userObj = savedUser.toObject();
+    delete userObj.password;
+    res.status(200).json(userObj);
 })
 
 const loginUser = asyncHandler(async (req, res) => {
@@ -66,7 +68,7 @@ const loginUser = asyncHandler(async (req, res) => {
         throw new Error('Duplicate user found');
     }
 
-    const userObj = user[0];
+    let userObj = user[0];
 
     // authenticating user's email and password.
     const validateUser = await bcrypt.compare(password, userObj?.password);
@@ -85,8 +87,11 @@ const loginUser = asyncHandler(async (req, res) => {
         expiresIn: '24h' // 24 hours
     })
 
+    userObj = userObj.toObject();
+    userObj.token = token;
+    delete userObj.password;
     // sending jwt token.
-    res.status(200).json(token);
+    res.status(200).json(userObj);
 })
 
 

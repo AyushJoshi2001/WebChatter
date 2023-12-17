@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { AuthService } from '../../../services/auth/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -15,7 +16,8 @@ export class LoginComponent implements OnInit {
 
   constructor(
     private formBuilder : FormBuilder,
-    private _snackBar: MatSnackBar
+    private _snackBar: MatSnackBar,
+    private authService: AuthService
   ) { }
 
   ngOnInit(): void {
@@ -30,7 +32,15 @@ export class LoginComponent implements OnInit {
     if(this.loginForm.invalid) {
       this.openSnackBar('Please fill all the details.', 'Ok');
     }
-    console.log(this.loginForm.value);
+
+    this.authService.loginUser(this.loginForm.value).subscribe(
+      (res: any) => {
+        console.log(res);
+      },
+      (error: any) => {
+        this.openSnackBar(error?.error, 'Ok')
+      }
+    )
   }
 
   openSnackBar(message: string, action: string) {
