@@ -3,15 +3,26 @@ import {
   HttpRequest,
   HttpHandler,
   HttpEvent,
-  HttpInterceptor
+  HttpInterceptor,
+  HttpErrorResponse
 } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, catchError, of, throwError } from 'rxjs';
 import { AUTH_TOKEN } from '../../../assets/constant';
+import { AuthService } from '../../services/auth/auth.service';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
 
-  constructor() {}
+  constructor(
+    private authService: AuthService
+  ) {}
+
+  private handleAuthError(err: HttpErrorResponse): Observable<any> {
+    if (err.status === 401 || err.status === 403) {
+        this.authService.logout();
+    }
+    return throwError(() => err);
+  }
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
     if(!(request.url.includes('login') || request.url.includes('register'))) {
@@ -25,6 +36,8 @@ export class AuthInterceptor implements HttpInterceptor {
         }
       });
     }
-    return next.handle(request);
+    return next.handle(request).pipe(
+      catchError(err => this.handleAuthError(err))
+    );
   }
 }

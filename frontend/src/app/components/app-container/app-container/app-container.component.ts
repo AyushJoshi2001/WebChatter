@@ -4,6 +4,7 @@ import { User } from '../../../Utils/interfaces/User';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { AUTH_TOKEN } from '../../../../assets/constant';
 
 @Component({
   selector: 'app-app-container',
@@ -14,21 +15,30 @@ export class AppContainerComponent implements OnInit {
   
   constructor(
     private userService: UserService,
-    private _snackBar: MatSnackBar
+    private _snackBar: MatSnackBar,
+    private router: Router
   ) { }
 
-  ngOnInit(): void {
+  ngOnInit(): void { 
+    this.initCalls();
+  }
+
+  initCalls() {
+    if(localStorage.getItem(AUTH_TOKEN)) {
       this.getProfile();
+    }
+    else {
+      this.router.navigateByUrl('/auth/login');
+    }
   }
 
   getProfile() {
     this.userService.getProfile().subscribe(
       (res: User) => {
-        console.log(res);
         this.userService.setUser(res);
       },
       (error: HttpErrorResponse) => {
-        this.openSnackBar(error.error, 'Ok')
+        this.openSnackBar(error.error, 'Ok');
       }
     )
   }
