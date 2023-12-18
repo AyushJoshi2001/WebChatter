@@ -87,11 +87,8 @@ const loginUser = asyncHandler(async (req, res) => {
         expiresIn: '24h' // 24 hours
     })
 
-    userObj = userObj.toObject();
-    userObj.token = token;
-    delete userObj.password;
     // sending jwt token.
-    res.status(200).json(userObj);
+    res.status(200).json(token);
 })
 
 

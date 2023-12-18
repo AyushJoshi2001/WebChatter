@@ -4,6 +4,7 @@ import { LoginComponent } from './components/auth-container/login/login.componen
 import { RegisterComponent } from './components/auth-container/register/register.component';
 import { HomeComponent } from './components/app-container/home/home.component';
 import { AuthContainerComponent } from './components/auth-container/auth-container/auth-container.component';
+import { AppContainerComponent } from './components/app-container/app-container/app-container.component';
 
 const routes: Routes = [
   {path: '', redirectTo: 'app', pathMatch: 'full'},
@@ -18,6 +19,7 @@ const routes: Routes = [
   },
   {
     path: 'app',
+    component: AppContainerComponent,
     children: [
       {path: '', redirectTo: 'home', pathMatch: 'full'},
       {path: 'home', component: HomeComponent, pathMatch: 'full'}

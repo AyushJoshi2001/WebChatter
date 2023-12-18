@@ -5,6 +5,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { AuthService } from '../../../services/auth/auth.service';
 import { Router } from '@angular/router';
+import { User } from '../../../Utils/interfaces/User';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-register',
@@ -47,10 +49,10 @@ export class RegisterComponent {
     }
     
     this.authService.registerUser(this.registerForm.value).subscribe(
-      (res: any) => {
+      (res: User) => {
         this.openDialog(this.registerSuccessRef);
       },
-      (error: any) => {
+      (error: HttpErrorResponse) => {
         this.openSnackBar(error?.error, 'Ok')
       }
     )

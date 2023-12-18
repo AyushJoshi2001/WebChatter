@@ -12,7 +12,9 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatDialogModule } from '@angular/material/dialog';
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
+import { AuthInterceptor } from './interceptor/auth/auth.interceptor';
+import { AppContainerComponent } from './components/app-container/app-container/app-container.component';
 
 @NgModule({
   declarations: [
@@ -20,7 +22,8 @@ import { HttpClientModule } from '@angular/common/http';
     HomeComponent,
     LoginComponent,
     RegisterComponent,
-    AuthContainerComponent
+    AuthContainerComponent,
+    AppContainerComponent
   ],
   imports: [
     BrowserModule,
@@ -33,7 +36,13 @@ import { HttpClientModule } from '@angular/common/http';
     MatDialogModule,
     HttpClientModule
   ],
-  providers: [],
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
+      multi: true
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

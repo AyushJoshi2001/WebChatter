@@ -2,6 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthService } from '../../../services/auth/auth.service';
+import { HttpErrorResponse } from '@angular/common/http';
+import { Router } from '@angular/router';
+import { AUTH_TOKEN } from '../../../../assets/constant';
 
 @Component({
   selector: 'app-login',
@@ -17,7 +20,8 @@ export class LoginComponent implements OnInit {
   constructor(
     private formBuilder : FormBuilder,
     private _snackBar: MatSnackBar,
-    private authService: AuthService
+    private authService: AuthService,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
@@ -34,11 +38,12 @@ export class LoginComponent implements OnInit {
     }
 
     this.authService.loginUser(this.loginForm.value).subscribe(
-      (res: any) => {
-        console.log(res);
+      (res: string) => {
+        localStorage.setItem(AUTH_TOKEN, JSON.stringify(res));
+        this.router.navigateByUrl('app/home');
       },
-      (error: any) => {
-        this.openSnackBar(error?.error, 'Ok')
+      (error: HttpErrorResponse) => {
+        this.openSnackBar(error?.error, 'Ok');
       }
     )
   }
