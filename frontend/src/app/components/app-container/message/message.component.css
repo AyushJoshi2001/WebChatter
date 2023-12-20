@@ -29,21 +29,8 @@ hr {
   border: 1px solid #e3dddd;
 }
 
-.back-icon {
-  height: 1.3rem;
-  width: 1.3rem;
-  font-size: 1.3rem;
-}
-
 .back-button {
   display: none;
-}
-
-.menu-icon {
-  background-color: transparent;
-  border: none;
-  outline: none;
-  cursor: pointer;
 }
 
 .head {
@@ -82,14 +69,6 @@ hr {
   font-weight: 600;
 }
 
-.send-button {
-  display: block;
-  background-color: transparent;
-  border: none;
-  outline: none;
-  cursor: pointer;
-}
-
 .msg-input {
   flex: 1;
   border: none;
@@ -99,11 +78,21 @@ hr {
   font-size: 1.1rem;
 }
 
+.basic-icon-button {
+  background-color: transparent;
+  border: none;
+  outline: none;
+  cursor: pointer;
+}
+
+.font-icon-md {
+  height: 1.8rem;
+  width: 1.8rem;
+  font-size: 1.8rem;
+}
+
 @media only screen and (max-width: 800px) {
   .back-button {
     display: block;
-    background-color: transparent;
-    border: none;
-    outline: none;
   }
 }

@@ -1,15 +1,16 @@
 <div class="main-container">
   <div>
     <div class="head-div">
-      <button class="back-button" type="button" mat-button (click)="toggleSideNav()"><mat-icon class="back-icon">arrow_back</mat-icon></button>
+      <button class="basic-icon-button back-button" type="button" mat-button (click)="toggleSideNav()"><mat-icon class="font-icon-md">arrow_back</mat-icon></button>
       <div class="outer-head">
         <div class="head">
           <img class="chat-img" src="/assets/images/chatBg.png" alt="chat-img">
           <p class="chat-name">Chat Name</p>
         </div>
         <div>
-          <button class="menu-icon" mat-icon-button [matMenuTriggerFor]="menu">
-            <mat-icon>more_vert</mat-icon>
+          <button class="basic-icon-button" title="add/remove participants"><mat-icon class="font-icon-md">add</mat-icon></button>
+          <button class="basic-icon-button" mat-icon-button [matMenuTriggerFor]="menu">
+            <mat-icon class="font-icon-md">more_vert</mat-icon>
           </button>
           <mat-menu #menu="matMenu">
             <button mat-menu-item>
@@ -36,7 +37,7 @@
     <hr>
     <form class="bottom-div">
       <input class="msg-input" type="text" name="newMessage" id="newMessage" placeholder="Type your message...">
-      <button class="send-button" type="submit"><mat-icon>send</mat-icon></button>
+      <button class="basic-icon-button" type="submit"><mat-icon class="font-icon-md">send</mat-icon></button>
     </form>
   </div>
 </div>
