@@ -1,1 +1,10 @@
-<p>home works!</p>
+<div class="main-container">
+  <mat-sidenav-container class="sidenav-container" autosize>
+    <mat-sidenav #drawer class="sidenav" mode="side" [opened]="openSideNav">
+      <app-chat></app-chat>
+    </mat-sidenav>
+    <mat-sidenav-content>
+      <app-message></app-message>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+</div>

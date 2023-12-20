@@ -1,0 +1,32 @@
+<div class="main-container">
+  <div class="top-header">
+    <div class="head">
+      <img class="logo" src="/assets/images/chatBg.png" alt="logo">
+      <p class="web-name">WebChatter</p>
+    </div>
+    <div>
+      <button class="menu-icon" mat-icon-button [matMenuTriggerFor]="menu">
+        <mat-icon>more_vert</mat-icon>
+      </button>
+      <mat-menu #menu="matMenu">
+        <button mat-menu-item>
+          <mat-icon>person</mat-icon>
+          <span>Profile</span>
+        </button>
+        <button mat-menu-item>
+          <mat-icon>search</mat-icon>
+          <span>Search User</span>
+        </button>
+        <button mat-menu-item (click)="logout()">
+          <mat-icon>logout</mat-icon>
+          <span>Logout</span>
+        </button>
+      </mat-menu>
+    </div>
+  </div>
+  <hr>
+
+  <div class="chat-list">
+    <app-chat-info *ngFor="let chat of [1, 1, 1, 1, 1, 1]"></app-chat-info>
+  </div>
+</div>

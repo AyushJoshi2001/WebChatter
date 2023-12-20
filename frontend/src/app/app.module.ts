@@ -15,6 +15,12 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { AuthInterceptor } from './interceptor/auth/auth.interceptor';
 import { AppContainerComponent } from './components/app-container/app-container/app-container.component';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { ChatComponent } from './components/app-container/chat/chat.component';
+import { MessageComponent } from './components/app-container/message/message.component';
+import { ChatInfoComponent } from './components/app-container/chat-info/chat-info.component';
+import { MatIconModule } from '@angular/material/icon';
+import { MatMenuModule } from '@angular/material/menu';
 
 @NgModule({
   declarations: [
@@ -23,7 +29,10 @@ import { AppContainerComponent } from './components/app-container/app-container/
     LoginComponent,
     RegisterComponent,
     AuthContainerComponent,
-    AppContainerComponent
+    AppContainerComponent,
+    ChatComponent,
+    MessageComponent,
+    ChatInfoComponent
   ],
   imports: [
     BrowserModule,
@@ -34,7 +43,10 @@ import { AppContainerComponent } from './components/app-container/app-container/
     ReactiveFormsModule,
     FormsModule,
     MatDialogModule,
-    HttpClientModule
+    HttpClientModule,
+    MatSidenavModule,
+    MatIconModule,
+    MatMenuModule
   ],
   providers: [
     {

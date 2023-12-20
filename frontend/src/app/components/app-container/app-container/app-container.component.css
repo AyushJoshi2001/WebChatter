@@ -1,0 +1,14 @@
+::ng-deep ::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+::ng-deep ::-webkit-scrollbar-track {
+  background: rgb(232, 233, 234);
+}
+
+/* Handle */
+::ng-deep ::-webkit-scrollbar-thumb {
+  background: rgb(189, 187, 187);
+  border-radius: 1rem;
+}

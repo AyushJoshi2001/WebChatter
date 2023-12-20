@@ -1,0 +1,55 @@
+.main-container {
+  padding: 1rem;
+  background-color: #F0F8FF;
+  min-height: 95vh;
+}
+
+.top-header {
+  display: flex;
+  justify-content: space-between;  
+  align-items: center;
+}
+
+.logo {
+  width: 4rem;
+  height: 4rem;
+  border-radius: 50%;
+  background-color: aqua;
+}
+
+hr {
+  border: 1px solid #e3dddd;
+}
+
+.chat-list {
+  max-height: 84.2vh;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.chat-list::-webkit-scrollbar {
+  display: none;
+}
+
+.menu-icon {
+  background-color: transparent;
+  border: none;
+  outline: none;
+  cursor: pointer;
+}
+
+.head {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+}
+
+.web-name {
+  font-size: 2rem;
+  margin: 0;
+  font-weight: 800;
+}

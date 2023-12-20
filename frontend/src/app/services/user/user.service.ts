@@ -11,6 +11,8 @@ import { userRoutes } from '../../Utils/routes/userRoutes';
 export class UserService {
   private userDataObs$ = new BehaviorSubject<User | null>(null);
   private userDataObs = this.userDataObs$.asObservable();
+  private toggleSideNav$ = new BehaviorSubject<Boolean>(true);
+  private toggleSideNav = this.toggleSideNav$.asObservable();
 
   constructor(
     private http: HttpClient
@@ -21,6 +23,13 @@ export class UserService {
   }
   setUser(data: User){
     this.userDataObs$.next(data);
+  }
+
+  getToggleSideNav() {
+    return this.toggleSideNav;
+  }
+  setToggleSideNav(){
+    this.toggleSideNav$.next(!this.toggleSideNav);
   }
 
   getProfile() : Observable<User> {

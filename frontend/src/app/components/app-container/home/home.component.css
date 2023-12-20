@@ -1,0 +1,14 @@
+.main-container {
+  min-height: 100vh;
+}
+
+.sidenav-container {
+  min-height: 100vh;
+  border: 1px solid rgba(0, 0, 0, 0.5);
+}
+
+.sidenav {
+  min-width: 25rem;
+  border-right: 2px solid lightgray;
+  border-radius: 0 2rem 2rem 0;
+}

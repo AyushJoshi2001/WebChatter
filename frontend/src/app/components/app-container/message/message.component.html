@@ -1,0 +1,42 @@
+<div class="main-container">
+  <div>
+    <div class="head-div">
+      <button class="back-button" type="button" mat-button (click)="toggleSideNav()"><mat-icon class="back-icon">arrow_back</mat-icon></button>
+      <div class="outer-head">
+        <div class="head">
+          <img class="chat-img" src="/assets/images/chatBg.png" alt="chat-img">
+          <p class="chat-name">Chat Name</p>
+        </div>
+        <div>
+          <button class="menu-icon" mat-icon-button [matMenuTriggerFor]="menu">
+            <mat-icon>more_vert</mat-icon>
+          </button>
+          <mat-menu #menu="matMenu">
+            <button mat-menu-item>
+              <mat-icon>settings</mat-icon>
+              <span>Settings</span>
+            </button>
+          </mat-menu>
+        </div>
+      </div>
+    </div>
+    <hr>
+  </div>
+
+  <div class="message-body">
+    <div *ngIf="messages && messages.length>0; else no_message">
+
+    </div>
+    <ng-template #no_message>
+      <p class="lg-text">Start the conversation...</p>
+    </ng-template>
+  </div>
+
+  <div>
+    <hr>
+    <form class="bottom-div">
+      <input class="msg-input" type="text" name="newMessage" id="newMessage">
+      <button class="send-button" type="submit"><mat-icon>send</mat-icon></button>
+    </form>
+  </div>
+</div>
