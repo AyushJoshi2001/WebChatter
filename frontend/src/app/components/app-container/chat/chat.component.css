@@ -22,7 +22,7 @@ hr {
 }
 
 .chat-list {
-  max-height: 84.2vh;
+  max-height: 79vh;
   overflow: auto;
   display: flex;
   flex-direction: column;
@@ -139,4 +139,18 @@ hr {
   font-weight: 400;
   color: rgb(158, 154, 154);
   margin: 0;
+}
+
+.chat-info {
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 1rem;
+}
+
+.chat-info:hover {
+  background-color: #e2eef9;
+}
+
+.bg-blue {
+  background-color: #e2eef9;
 }

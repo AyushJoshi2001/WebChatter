@@ -13,6 +13,7 @@
 
 .chat-info {
   max-width: 25rem;
+  width: 100%;
 }
 
 .chat-name {

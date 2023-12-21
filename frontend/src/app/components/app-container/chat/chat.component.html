@@ -31,7 +31,7 @@
   <hr>
 
   <div class="chat-list">
-    <app-chat-info *ngFor="let chat of [1, 1, 1, 1, 1, 1]"></app-chat-info>
+    <app-chat-info class="chat-info" [chat]="chat" *ngFor="let chat of chats" (click)="selectChat(chat)" [ngClass]="{'bg-blue' : selectedChat?._id===chat._id}"></app-chat-info>
   </div>
 </div>
 
@@ -41,7 +41,7 @@
     <input class="input" type="text" placeholder="Search..." [(ngModel)]="searchKey" (input)="onSearchKeyChange()">
     <div class="userlist-container">
       <div *ngIf="searchResults && searchResults.length>0; else no_results">
-        <div class="outer-div"  *ngFor="let user of searchResults" title="Click to start conversation">
+        <div class="outer-div"  *ngFor="let user of searchResults" title="Click to start conversation" (click)="accessIndividualChat(user)">
           <img class="user-pic" src="{{ user?.profileImg }}">
           <div class="innner-div">
             <p class="user-name">{{ user?.name }}</p>

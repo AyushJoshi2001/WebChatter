@@ -2,11 +2,13 @@ import { Message } from "./Message"
 import { User } from "./User"
 
 export interface Chat {
-  chatName: string,
-  isGroupChat: boolean,
-  participants: User[],
-  latestMessage: Message,
-  groupAdmin: User,
-  createdAt: Date,
-  updatedAt: Date
+  _id: string;
+  chatName: string;
+  isGroupChat: boolean;
+  groupImg: string;
+  participants: User[];
+  latestMessage: Message;
+  groupAdmin: User;
+  createdAt: Date;
+  updatedAt: Date;
 }

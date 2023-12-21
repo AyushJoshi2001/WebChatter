@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, BehaviorSubject } from 'rxjs';
 import { Chat } from '../../Utils/interfaces/Chat';
 import { chatRoutes } from '../../Utils/routes/chatRoutes';
 import { HttpClient } from '@angular/common/http';
@@ -8,10 +8,19 @@ import { HttpClient } from '@angular/common/http';
   providedIn: 'root'
 })
 export class ChatService {
-
+  private selectedChat$ = new BehaviorSubject<Chat | null>(null);
+  private selectedChat = this.selectedChat$.asObservable();
   constructor(
     private http: HttpClient
   ) { }
+
+  getSelectedChat(): Observable<Chat|null> {
+    return this.selectedChat;
+  }
+
+  setSelectedChat(data: Chat){
+    this.selectedChat$.next(data);
+  }
 
   fetchAllChats(): Observable<Chat[]> {
     let route = chatRoutes.FETCH_ALL_CHATS;
