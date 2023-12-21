@@ -17,7 +17,7 @@
           <mat-icon>group</mat-icon>
           <span>Create Group</span>
         </button>
-        <button mat-menu-item>
+        <button mat-menu-item (click)="openDialog(search_user)">
           <mat-icon>search</mat-icon>
           <span>Search User</span>
         </button>
@@ -34,3 +34,27 @@
     <app-chat-info *ngFor="let chat of [1, 1, 1, 1, 1, 1]"></app-chat-info>
   </div>
 </div>
+
+<ng-template #search_user>
+  <h2 mat-dialog-title>Search User</h2>
+  <mat-dialog-content>
+    <input class="input" type="text" placeholder="Search..." [(ngModel)]="searchKey" (input)="onSearchKeyChange()">
+    <div class="userlist-container">
+      <div *ngIf="searchResults && searchResults.length>0; else no_results">
+        <div class="outer-div"  *ngFor="let user of searchResults" title="Click to start conversation">
+          <img class="user-pic" src="{{ user?.profileImg }}">
+          <div class="innner-div">
+            <p class="user-name">{{ user?.name }}</p>
+            <p class="user-email">{{ user?.email }}</p>
+          </div>
+        </div>
+      </div>
+      <ng-template #no_results>
+        <p class="no-results">No results available.</p>
+      </ng-template>
+    </div>
+  </mat-dialog-content>
+  <mat-dialog-actions align="center">
+    <button class="close-btn" mat-button mat-dialog-close>Close</button>
+  </mat-dialog-actions>
+</ng-template>

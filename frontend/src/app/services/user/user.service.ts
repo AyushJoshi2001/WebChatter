@@ -36,4 +36,12 @@ export class UserService {
     let route = userRoutes.GET_PROFILE;
     return this.http.get<User>(route);
   }
+
+  getUsers(payload: any): Observable<User[]> {
+    let route = userRoutes.GET_USERS;
+    route = route.replace(':SEARCH_KEY', payload?.searchKey);
+    route = route.replace(':PAGE_NO', payload?.pageNo);
+    route = route.replace(':PAGE_SIZE', payload?.pageSize);
+    return this.http.get<User[]>(route); 
+  }
 }

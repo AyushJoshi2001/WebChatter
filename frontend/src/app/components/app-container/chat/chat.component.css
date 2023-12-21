@@ -59,3 +59,84 @@ hr {
   margin: 0;
   font-weight: 800;
 }
+
+.input {
+  min-width: 25rem;
+  padding: 0.8rem 1rem;
+  border: 1px solid gray;
+  outline: none;
+  border-radius: 10rem;
+  font-size: 1rem;
+}
+
+.no-results {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.3rem;
+  height: 88%;
+}
+
+.userlist-container {
+  max-height: 52vh;
+  height: 100%;
+  overflow: auto;
+  margin-top: 1rem;
+}
+
+.close-btn {
+  cursor: pointer;
+  background-color: #d54f45;
+  padding: 0.5rem 1.3rem;
+  border-radius: 0.5rem;
+  outline: none;
+  border: none;
+  box-shadow: 2px 4px 10px gray;
+  color: white;
+  font-size: 1.1rem;
+}
+
+.close-btn:hover {
+  background-color: #c54138;
+}
+
+.outer-div {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 1.5rem;
+  background-color: #F0F8FF;
+  border-radius: 1rem;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+}
+
+.outer-div:hover {
+  background-color: #e2eef9;
+}
+
+.user-pic {
+  height: 3.5rem;
+  width: 3.5rem;
+  border-radius: 10rem;
+  border: 2px solid gray;
+}
+
+.inner-div {
+  display: flex;
+  flex-direction: column;
+}
+
+.user-name {
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: black;
+  margin: 0;
+}
+
+.user-email {
+  font-size: 0.9rem;
+  font-weight: 400;
+  color: rgb(158, 154, 154);
+  margin: 0;
+}
