@@ -23,9 +23,11 @@ export class ChatInfoComponent implements OnInit {
   }
 
   getUserProfile() {
-    this.userService.getProfile().subscribe(
-      (data: User) => {
-        this.userProfile = data;
+    this.userService.getUser().subscribe(
+      (data: User|null) => {
+        if(data) {
+          this.userProfile = data;
+        }
       }
     )
   }

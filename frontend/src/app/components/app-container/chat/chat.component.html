@@ -13,7 +13,7 @@
           <mat-icon>person</mat-icon>
           <span>Profile</span>
         </button>
-        <button mat-menu-item>
+        <button mat-menu-item (click)="openDialog(create_group_chat)">
           <mat-icon>group</mat-icon>
           <span>Create Group</span>
         </button>
@@ -48,6 +48,9 @@
             <p class="user-email">{{ user?.email }}</p>
           </div>
         </div>
+        <div class="load-more-btn-container" *ngIf="!noMoreResultsFound">
+          <button class="load-more-btn" (click)="loadMoreSearchResults()">Load more</button>
+        </div>
       </div>
       <ng-template #no_results>
         <p class="no-results">No results available.</p>
@@ -56,5 +59,47 @@
   </mat-dialog-content>
   <mat-dialog-actions align="center">
     <button class="close-btn" mat-button mat-dialog-close>Close</button>
+  </mat-dialog-actions>
+</ng-template>
+
+<ng-template #create_group_chat>
+  <h2 mat-dialog-title>Create Group</h2>
+  <mat-dialog-content>
+    <div class="flex-column">
+      <input class="input" type="text" placeholder="Group Name..." [(ngModel)]="newGroupName">
+      <div>
+        <hr>
+        <h4 class="m-0">Selected Participants:</h4>
+        <div class="outer-list">
+          <div class="individual-user" *ngFor="let user of newGroupParticipants">
+            <mat-icon class="delete-icon" (click)="removeNewGroupParticipants(user)">close</mat-icon>
+            <img class="user-pic" src="{{ user?.profileImg }}">
+            <span class="username">{{ user?.name }}</span>
+          </div>
+        </div>
+        <p class="m-0 warn-text" *ngIf="newGroupParticipants && newGroupParticipants.length<2">Please select atleast 2 participants.</p>
+      </div>
+    </div>
+    <div class="userlist-container-overflow">
+      <hr>
+      <h4>User List:</h4>
+      <input class="input" type="text" placeholder="Search..." [(ngModel)]="searchKey" (input)="onSearchKeyChange()">
+      <div *ngIf="searchResults && searchResults.length>0; else no_results">
+        <div class="outer-div"  *ngFor="let user of searchResults" title="Click to add participants" (click)="addParticipantsInNewGroupChat(user)">
+          <img class="user-pic" src="{{ user?.profileImg }}">
+          <div class="innner-div">
+            <p class="user-name">{{ user?.name }}</p>
+            <p class="user-email">{{ user?.email }}</p>
+          </div>
+        </div>
+      </div>
+      <ng-template #no_results>
+        <p class="no-results-available">No results available.</p>
+      </ng-template>
+    </div>
+  </mat-dialog-content>
+  <mat-dialog-actions align="center">
+    <button class="create-btn" mat-button (click)="createGroupChat()">Create</button>
+    <button class="close-btn ml-1" mat-button mat-dialog-close>Close</button>
   </mat-dialog-actions>
 </ng-template>

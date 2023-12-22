@@ -15,12 +15,16 @@ import { Chat } from '../../../Utils/interfaces/Chat';
 })
 export class ChatComponent implements OnInit {
   
+  user: User|null = null;
   searchResults: User[] = [];
   searchKey: string = '';
   userSearchPageNo: number = 1;
   userSearchPageSize: number = 10;
   chats: Chat[] = [];
   selectedChat: Chat|undefined;
+  newGroupName: string = '';
+  newGroupParticipants: User[] = [];
+  noMoreResultsFound: boolean = false;
 
   constructor(
     private authService: AuthService,
@@ -31,10 +35,20 @@ export class ChatComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.getUser();
     this.fetchAllChats();
     this.getSelectedChat();
   }
 
+  getUser() {
+    this.userService.getUser().subscribe(
+      (data: User|null) => {
+        if(data) {
+          this.user = data;
+        }
+      }
+    )
+  }
   logout() {
     this.authService.logout();
   }
@@ -54,15 +68,20 @@ export class ChatComponent implements OnInit {
   resetData() {
     this.searchResults = [];
     this.searchKey = '';
+    this.newGroupName = '';
+    this.newGroupParticipants = [];
+    this.noMoreResultsFound = false;
+    this.userSearchPageNo = 1;
   }
 
   onSearchKeyChange() {
+    this.userSearchPageNo = 1;
+    this.searchResults = [];
     this.fetchUsers();
   }
 
   fetchUsers() {
     if(!this.searchKey) {
-      this.searchResults = [];
       return;
     }
 
@@ -73,7 +92,12 @@ export class ChatComponent implements OnInit {
     }
     this.userService.getUsers(payload).subscribe(
       (response: User[]) => {
-        this.searchResults = response;
+        this.searchResults.push(...response);
+        if(response.length===0) {
+          this.noMoreResultsFound = true;
+        } else {
+          this.noMoreResultsFound = false;
+        }
       },
       (error: HttpErrorResponse) => {
         this.openSnackBar(error?.error, 'Ok');
@@ -138,5 +162,54 @@ export class ChatComponent implements OnInit {
         }
       )
     }
+  }
+
+  addParticipantsInNewGroupChat(newUser: User) {
+    for(let user of this.newGroupParticipants) {
+      if(user._id === newUser._id) {
+        return;
+      }
+    }
+    this.newGroupParticipants.push(newUser);
+  }
+
+  removeNewGroupParticipants(newUser: User) {
+    this.newGroupParticipants = this.newGroupParticipants.filter(user => user._id !== newUser._id);
+  }
+
+  loadMoreSearchResults() {
+    this.userSearchPageNo++;
+    this.fetchUsers();
+  }
+
+  createGroupChat() {
+    if(!this.newGroupName || this.newGroupName.length<3) {
+      this.openSnackBar('Group Name must be atleast 3 character.', 'Ok');
+      return;
+    }
+    if(!this.newGroupParticipants || this.newGroupParticipants.length<2) {
+      this.openSnackBar('Please select atleast 2 participants.', 'Ok');
+      return;
+    }
+
+    if(this.user) {
+      this.newGroupParticipants.push(this.user);
+    } 
+    let payload = {
+      groupMembers: this.newGroupParticipants,
+      groupName: this.newGroupName
+    }
+    this.chatService.createGroupChat(payload).subscribe(
+      (response: Chat[]) => {
+        this.dialog.closeAll();
+        this.fetchAllChats();
+        if(response && response.length>0) {
+          this.chatService.setSelectedChat(response[0]);
+        }
+      },
+      (error: HttpErrorResponse) => {
+        this.openSnackBar(error?.error, 'Ok');
+      }
+    )
   }
 }

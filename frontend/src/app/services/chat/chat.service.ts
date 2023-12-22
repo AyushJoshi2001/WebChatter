@@ -31,4 +31,9 @@ export class ChatService {
     let route = chatRoutes.ACCESS_INDIVIDUAL_CHAT;
     return this.http.post<Chat>(route, payload);
   }
+
+  createGroupChat(payload: any): Observable<Chat[]> {
+    let route = chatRoutes.CREATE_GROUP_CHAT;
+    return this.http.post<Chat[]>(route, payload);
+  }
 }

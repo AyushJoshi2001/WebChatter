@@ -142,6 +142,9 @@ const removeFromGroup = asyncHandler(async (req, res, next) => {
     if(!groupId) {
         res.status(400).json('groupId is missing');
     }
+    if(userId==req.user?._id) {
+        res.status(400).json('Group admin can not be removed');
+    }
 
     let removeMemberFromGroup = await Chat.findOneAndUpdate(
         { _id: groupId, isGroupChat: true, groupAdmin: req.user._id }, 
