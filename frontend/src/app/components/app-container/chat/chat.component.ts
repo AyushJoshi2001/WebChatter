@@ -25,6 +25,8 @@ export class ChatComponent implements OnInit {
   newGroupName: string = '';
   newGroupParticipants: User[] = [];
   noMoreResultsFound: boolean = false;
+  profileEdit: boolean = false;
+  newName: string = '';
 
   constructor(
     private authService: AuthService,
@@ -211,5 +213,33 @@ export class ChatComponent implements OnInit {
         this.openSnackBar(error?.error, 'Ok');
       }
     )
+  }
+
+  openProfileDialog(context: any) {
+    const dialogRef = this.dialog.open(context, {
+      disableClose: true,
+      height: 'auto'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      // action after close.
+      this.resetProfileDialog();
+    });
+  }
+
+  editProfile() {
+    this.profileEdit = !this.profileEdit;
+    if(this.user?.name) {
+      this.newName = this.user.name;
+    }
+  }
+
+  updateProfile() {
+    
+  }
+
+  resetProfileDialog() {
+    this.profileEdit = false;
+    this.newName = '';
   }
 }

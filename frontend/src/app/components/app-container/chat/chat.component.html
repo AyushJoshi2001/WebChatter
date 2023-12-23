@@ -9,7 +9,7 @@
         <mat-icon class="menu-icon">more_vert</mat-icon>
       </button>
       <mat-menu #menu="matMenu">
-        <button mat-menu-item>
+        <button mat-menu-item (click)="openProfileDialog(show_profile)">
           <mat-icon>person</mat-icon>
           <span>Profile</span>
         </button>
@@ -100,6 +100,26 @@
   </mat-dialog-content>
   <mat-dialog-actions align="center">
     <button class="create-btn" mat-button (click)="createGroupChat()">Create</button>
+    <button class="close-btn ml-1" mat-button mat-dialog-close>Close</button>
+  </mat-dialog-actions>
+</ng-template>
+
+<ng-template #show_profile>
+  <h2 mat-dialog-title class="size-3">My Profile</h2>
+  <mat-dialog-content>
+    <div class="profile-head">
+      <img class="profile-img" src="{{ user?.profileImg }}" alt="profile-img">
+      <div class="profile-inner">
+        <p class="profile-name ellipsis" *ngIf="!profileEdit">{{ user?.name }}</p>
+        <input class="profile-name ellipsis" *ngIf="profileEdit" [(ngModel)]="newName">
+        <p class="profile-email ellipsis">{{ user?.email }}</p>
+        <p class="profile-email ellipsis">Since {{ user?.createdAt | date:'dd-MMM-yyyy' }}</p>
+      </div>
+    </div>
+  </mat-dialog-content>
+  <mat-dialog-actions align="center">
+    <!-- <button class="create-btn" mat-button *ngIf="!profileEdit" (click)="editProfile()">Edit</button>
+    <button class="create-btn" mat-button *ngIf="profileEdit" (click)="updateProfile()">Update</button> -->
     <button class="close-btn ml-1" mat-button mat-dialog-close>Close</button>
   </mat-dialog-actions>
 </ng-template>

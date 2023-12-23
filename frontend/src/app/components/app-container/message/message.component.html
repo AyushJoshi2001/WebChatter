@@ -1,19 +1,22 @@
-<div class="main-container">
+<div class="main-container" *ngIf="selectedChat; else no_chat">
   <div>
     <div class="head-div">
       <button class="basic-icon-button back-button" type="button" mat-button (click)="toggleSideNav()"><mat-icon class="font-icon-md">arrow_back</mat-icon></button>
       <div class="outer-head">
         <div class="head">
-          <img class="chat-img" src="/assets/images/chatBg.png" alt="chat-img">
-          <p class="chat-name">Chat Name</p>
+          <img class="chat-img" src="{{ selectedChat.groupImg }}" alt="chat-img">
+          <p class="chat-name">{{ getChatName() }}</p>
         </div>
         <div>
-          <button class="basic-icon-button" title="add/remove participants"><mat-icon class="font-icon-md">add</mat-icon></button>
           <button class="basic-icon-button" mat-icon-button [matMenuTriggerFor]="menu">
             <mat-icon class="font-icon-md">more_vert</mat-icon>
           </button>
           <mat-menu #menu="matMenu">
-            <button mat-menu-item>
+            <button mat-menu-item *ngIf="!selectedChat.isGroupChat" (click)="openParticipantProfile(show_profile)"> <!-- when chat is individual chat -->
+              <mat-icon>info</mat-icon>
+              <span>Details</span>
+            </button>
+            <button mat-menu-item *ngIf="selectedChat.isGroupChat"> <!-- when chat is group chat -->
               <mat-icon>settings</mat-icon>
               <span>Settings</span>
             </button>
@@ -29,7 +32,7 @@
 
     </div>
     <ng-template #no_message>
-      <p class="lg-text">Start the conversation...</p>
+      <p class="lg-text">Start the conversation... 💫</p>
     </ng-template>
   </div>
 
@@ -41,3 +44,27 @@
     </form>
   </div>
 </div>
+
+<ng-template #no_chat>
+  <div class="no-text-container">
+    <p class="no-text">Welcome Back!! 🥳</p>
+    <p class="no-text">Please select a chat... 🗨️</p>
+  </div>
+</ng-template>
+
+<ng-template #show_profile>
+  <h2 mat-dialog-title class="size-3">User Profile</h2>
+  <mat-dialog-content>
+    <div class="profile-head">
+      <img class="profile-img" src="{{ individualChatUser?.profileImg }}" alt="profile-img">
+      <div class="profile-inner">
+        <p class="profile-name ellipsis">{{ individualChatUser?.name }}</p>
+        <p class="profile-email ellipsis">{{ individualChatUser?.email }}</p>
+        <p class="profile-email ellipsis">Since {{ individualChatUser?.createdAt | date:'dd-MMM-yyyy' }}</p>
+      </div>
+    </div>
+  </mat-dialog-content>
+  <mat-dialog-actions align="center">
+    <button class="close-btn" mat-button mat-dialog-close>Close</button>
+  </mat-dialog-actions>
+</ng-template>
