@@ -20,6 +20,10 @@
               <mat-icon>info</mat-icon>
               <span>Group Details</span>
             </button>
+            <button mat-menu-item *ngIf="selectedChat.isGroupChat && selectedChat.groupAdmin._id===user?._id" (click)="openDialog(add_or_remove_participants)"> <!-- when chat is group chat -->
+              <mat-icon>group</mat-icon>
+              <span>Add/Remove Participants</span>
+            </button>
           </mat-menu>
         </div>
       </div>
@@ -82,8 +86,54 @@
     </div>
   </mat-dialog-content>
   <mat-dialog-actions align="center">
-    <button class="create-btn" mat-button *ngIf="!groupDetailsEdit" (click)="editGroupDetails()">Edit</button>
-    <button class="create-btn" mat-button *ngIf="groupDetailsEdit" (click)="updateGroup()">Update</button>
+    <button class="create-btn" mat-button *ngIf="!groupDetailsEdit &&  selectedChat?.groupAdmin?._id===user?._id" (click)="editGroupDetails()">Edit</button>
+    <button class="create-btn" mat-button *ngIf="groupDetailsEdit &&  selectedChat?.groupAdmin?._id===user?._id" (click)="updateGroup()">Update</button>
+    <button class="close-btn ml-1" mat-button mat-dialog-close>Close</button>
+  </mat-dialog-actions>
+</ng-template>
+
+<ng-template #add_or_remove_participants>
+  <h2 mat-dialog-title>Add/Remove Participants</h2>
+  <mat-dialog-content>
+    <div class="flex-column">
+      <div>
+        <hr>
+        <h4 class="m-0">Participants:</h4>
+        <div class="outer-list">
+          <div class="individual-user" *ngFor="let user of selectedChat?.participants">
+            <mat-icon class="delete-icon" (click)="removeParticipant(user)" title="remove participant">close</mat-icon>
+            <img class="user-pic" src="{{ user?.profileImg }}">
+            <span class="username pointer" (click)="openParticipantProfileFromGroupChat(show_profile, user)" title="user details">{{ user?.name }}</span>
+          </div>
+        </div>
+        <!-- <p class="m-0 warn-text" *ngIf="newGroupParticipants && newGroupParticipants.length<2">Please select atleast 2 participants.</p> -->
+      </div>
+    </div>
+    <div class="userlist-container-overflow">
+      <hr>
+      <h4>Add Participants:</h4>
+      <input class="input" type="text" placeholder="Search..." [(ngModel)]="searchKey" (input)="onSearchKeyChange()">
+      <div *ngIf="searchResults && searchResults.length>0; else no_results">
+        <div class="add-user-card" *ngFor="let user of searchResults">
+          <div class="outer-div flex-1" title="Click to add participants">
+            <img class="user-pic" src="{{ user?.profileImg }}">
+            <div class="innner-div">
+              <p class="user-name">{{ user?.name }}</p>
+              <p class="user-email">{{ user?.email }}</p>
+            </div>
+          </div>
+          <button class="pointer add-icon" (click)="addParticipant(user)" title="add participant"><mat-icon>add</mat-icon></button>      
+        </div>
+        <div class="load-more-btn-container" *ngIf="!noMoreResultsFound">
+          <button class="load-more-btn" (click)="loadMoreSearchResults()">Load more</button>
+        </div>
+      </div>
+      <ng-template #no_results>
+        <p class="no-results-available">No results available.</p>
+      </ng-template>
+    </div>
+  </mat-dialog-content>
+  <mat-dialog-actions align="center">
     <button class="close-btn ml-1" mat-button mat-dialog-close>Close</button>
   </mat-dialog-actions>
 </ng-template>

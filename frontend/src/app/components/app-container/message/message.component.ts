@@ -21,6 +21,11 @@ export class MessageComponent implements OnInit {
   individualChatUser: User|null = null;
   groupDetailsEdit: boolean = false;
   newGroupName: string = '';
+  searchResults: User[] = [];
+  searchKey: string = '';
+  userSearchPageNo: number = 1;
+  userSearchPageSize: number = 10;
+  noMoreResultsFound: boolean = false;
 
   constructor(
     private userService: UserService,
@@ -91,8 +96,17 @@ export class MessageComponent implements OnInit {
     });
   }
 
+  openParticipantProfileFromGroupChat(context: any, user: User) {
+    this.openParticipantProfile(context);
+    this.individualChatUser = user;
+  }
+
   resetData() {
     this.newGroupName = '';
+    this.userSearchPageNo = 1;
+    this.searchResults = [];
+    this.searchKey = '';
+    this.individualChatUser = null;
   }
 
   editGroupDetails() {
@@ -135,5 +149,61 @@ export class MessageComponent implements OnInit {
         this.openSnackBar(error?.error, 'Ok');
       }
     )
+  }
+
+  onSearchKeyChange() {
+    this.userSearchPageNo = 1;
+    this.searchResults = [];
+    this.fetchUsers();
+  }
+
+  fetchUsers() {
+    if(!this.searchKey) {
+      return;
+    }
+
+    const payload = {
+      searchKey: this.searchKey,
+      pageNo: this.userSearchPageNo,
+      pageSize: this.userSearchPageSize
+    }
+    this.userService.getUsers(payload).subscribe(
+      (response: User[]) => {
+        this.searchResults.push(...response);
+        if(response.length===0) {
+          this.noMoreResultsFound = true;
+        } else {
+          this.noMoreResultsFound = false;
+        }
+      },
+      (error: HttpErrorResponse) => {
+        this.openSnackBar(error?.error, 'Ok');
+      }
+    )
+  }
+
+  loadMoreSearchResults() {
+    this.userSearchPageNo++;
+    this.fetchUsers();
+  }
+
+  openDialog(context: any) {
+    const dialogRef = this.dialog.open(context, {
+      disableClose: true,
+      height: '80vh'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      // action after close.
+      this.resetData();
+    });
+  }
+
+  removeParticipant(oldUser: User) {
+
+  }
+
+  addParticipant(newUser: User) {
+    
   }
 }
