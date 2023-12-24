@@ -190,7 +190,8 @@ export class MessageComponent implements OnInit {
   openDialog(context: any) {
     const dialogRef = this.dialog.open(context, {
       disableClose: true,
-      height: '80vh'
+      height: '80vh',
+      width: '30rem'
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -200,10 +201,34 @@ export class MessageComponent implements OnInit {
   }
 
   removeParticipant(oldUser: User) {
-
+    let payload = {
+      groupId: this.selectedChat?._id,
+      userId: oldUser._id
+    }
+    this.chatService.removeParticipantFromGroup(payload).subscribe(
+      (response: Chat) => {
+        this.chatService.setSelectedChat(response);
+        this.fetchAllChats();
+      },
+      (error: HttpErrorResponse) => {
+        this.openSnackBar(error?.error, 'Ok');
+      }
+    )
   }
 
   addParticipant(newUser: User) {
-    
+    let payload = {
+      groupId: this.selectedChat?._id,
+      userId: newUser._id
+    }
+    this.chatService.addParticipantToGroup(payload).subscribe(
+      (response: Chat) => {
+        this.chatService.setSelectedChat(response);
+        this.fetchAllChats();
+      },
+      (error: HttpErrorResponse) => {
+        this.openSnackBar(error?.error, 'Ok');
+      }
+    )
   }
 }

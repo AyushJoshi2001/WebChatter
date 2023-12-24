@@ -20,9 +20,9 @@
               <mat-icon>info</mat-icon>
               <span>Group Details</span>
             </button>
-            <button mat-menu-item *ngIf="selectedChat.isGroupChat && selectedChat.groupAdmin._id===user?._id" (click)="openDialog(add_or_remove_participants)"> <!-- when chat is group chat -->
+            <button mat-menu-item *ngIf="selectedChat.isGroupChat" (click)="openDialog(add_or_remove_participants)"> <!-- when chat is group chat -->
               <mat-icon>group</mat-icon>
-              <span>Add/Remove Participants</span>
+              <span>{{ selectedChat.groupAdmin._id===user?._id ? 'Add/Remove Participants' : 'Participants' }}</span>
             </button>
           </mat-menu>
         </div>
@@ -93,23 +93,23 @@
 </ng-template>
 
 <ng-template #add_or_remove_participants>
-  <h2 mat-dialog-title>Add/Remove Participants</h2>
+  <h2 mat-dialog-title>{{ selectedChat?.groupAdmin?._id===user?._id ? 'Add/Remove Participants' : 'Participants' }}</h2>
   <mat-dialog-content>
     <div class="flex-column">
       <div>
-        <hr>
         <h4 class="m-0">Participants:</h4>
         <div class="outer-list">
-          <div class="individual-user" *ngFor="let user of selectedChat?.participants">
-            <mat-icon class="delete-icon" (click)="removeParticipant(user)" title="remove participant">close</mat-icon>
+          <div class="individual-user" *ngFor="let userObj of selectedChat?.participants">
+            <mat-icon class="delete-icon" *ngIf="user?._id==selectedChat?.groupAdmin?._id && userObj._id!==selectedChat?.groupAdmin?._id" (click)="removeParticipant(userObj)" title="remove participant">close</mat-icon>
+            <mat-icon class="star-icon" *ngIf="userObj._id===selectedChat?.groupAdmin?._id" title="Group Admin">star</mat-icon>
             <img class="user-pic" src="{{ user?.profileImg }}">
-            <span class="username pointer" (click)="openParticipantProfileFromGroupChat(show_profile, user)" title="user details">{{ user?.name }}</span>
+            <span class="username pointer" (click)="openParticipantProfileFromGroupChat(show_profile, userObj)" title="user details">{{ userObj?.name }}</span>
           </div>
         </div>
         <!-- <p class="m-0 warn-text" *ngIf="newGroupParticipants && newGroupParticipants.length<2">Please select atleast 2 participants.</p> -->
       </div>
     </div>
-    <div class="userlist-container-overflow">
+    <div class="userlist-container-overflow" *ngIf="user?._id==selectedChat?.groupAdmin?._id">
       <hr>
       <h4>Add Participants:</h4>
       <input class="input" type="text" placeholder="Search..." [(ngModel)]="searchKey" (input)="onSearchKeyChange()">

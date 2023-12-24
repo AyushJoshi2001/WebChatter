@@ -52,4 +52,14 @@ export class ChatService {
     let route = chatRoutes.UPDATE_GROUP_CHAT;
     return this.http.put<Chat>(route, payload);
   }
+
+  addParticipantToGroup(payload: any): Observable<Chat> {
+    let route = chatRoutes.ADD_PARTICIPANT_TO_GROUP_CHAT;
+    return this.http.put<Chat>(route, payload);
+  }
+
+  removeParticipantFromGroup(payload: any): Observable<Chat> {
+    let route = chatRoutes.REMOVE_PARTICIPANT_FROM_GROUP_CHAT;
+    return this.http.put<Chat>(route, payload);
+  }
 }

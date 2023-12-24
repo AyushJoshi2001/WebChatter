@@ -259,6 +259,20 @@ hr {
   cursor: pointer;
 }
 
+.star-icon {
+  position: absolute;
+  top: 0;
+  right: 0;
+  font-weight: bold;
+  color: white;
+  border-radius: 4rem;
+  background-color: #22b64c;
+  font-size: 1rem;
+  height: 1rem;
+  width: 1rem;
+  padding: 0.1rem;
+}
+
 .delete-icon:hover {
   background-color: #c54138;
 }
