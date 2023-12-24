@@ -44,4 +44,9 @@ export class UserService {
     route = route.replace(':PAGE_SIZE', payload?.pageSize);
     return this.http.get<User[]>(route); 
   }
+
+  updateProfile(payload: any): Observable<User> {
+    let route = userRoutes.UPDATE_USER;
+    return this.http.put<User>(route, payload); 
+  }
 }

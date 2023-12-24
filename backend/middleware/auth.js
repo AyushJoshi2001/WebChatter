@@ -13,7 +13,6 @@ const authorizeUser = asyncHandler(async (req, res, next) => {
 
         await jwt.verify(authToken, process.env.JWT_SECRET_KEY, async (err, data) => {
             if(err) {
-                console.log('Unauthorized access.');
                 res.status(403).json('Unauthorized');
             }
             if(data) {
@@ -28,7 +27,6 @@ const authorizeUser = asyncHandler(async (req, res, next) => {
         })
     }
     else {
-        console.log('Unauthorized access.');
         res.status(403).json('Unauthorized')
     }
 })

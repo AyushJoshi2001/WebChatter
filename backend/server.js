@@ -21,6 +21,10 @@ app.use('/api/auth', authRoutes);
 app.use('/api/user', userRoutes);
 app.use('/api/chat', chatRoutes);
 app.use('/api/message', messageRoutes);
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).send('Something went wrong!');
+});
 
 app.listen(process.env.PORT || 5000 ,() => {
   console.log(`Server is running on port:${process.env.PORT || 5000}...`);

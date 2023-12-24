@@ -10,6 +10,9 @@ import { HttpClient } from '@angular/common/http';
 export class ChatService {
   private selectedChat$ = new BehaviorSubject<Chat | null>(null);
   private selectedChat = this.selectedChat$.asObservable();
+  private allChats$ = new BehaviorSubject<Chat[]>([]);
+  private allChats = this.allChats$.asObservable();
+
   constructor(
     private http: HttpClient
   ) { }
@@ -20,6 +23,14 @@ export class ChatService {
 
   setSelectedChat(data: Chat){
     this.selectedChat$.next(data);
+  }
+
+  getAllChats(): Observable<Chat[]> {
+    return this.allChats;
+  }
+
+  setAllChats(data: Chat[]){
+    this.allChats$.next(data);
   }
 
   fetchAllChats(): Observable<Chat[]> {
@@ -35,5 +46,10 @@ export class ChatService {
   createGroupChat(payload: any): Observable<Chat[]> {
     let route = chatRoutes.CREATE_GROUP_CHAT;
     return this.http.post<Chat[]>(route, payload);
+  }
+  
+  updateGroupChat(payload: any): Observable<Chat> {
+    let route = chatRoutes.UPDATE_GROUP_CHAT;
+    return this.http.put<Chat>(route, payload);
   }
 }

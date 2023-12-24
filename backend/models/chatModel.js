@@ -4,7 +4,8 @@ const chatSchema = mongoose.Schema(
     {
         chatName: {
             type: String,
-            required: true
+            required: true,
+            minlength: 3
         },
         isGroupChat: {
             type: Boolean,

@@ -16,9 +16,9 @@
               <mat-icon>info</mat-icon>
               <span>Details</span>
             </button>
-            <button mat-menu-item *ngIf="selectedChat.isGroupChat"> <!-- when chat is group chat -->
-              <mat-icon>settings</mat-icon>
-              <span>Settings</span>
+            <button mat-menu-item *ngIf="selectedChat.isGroupChat" (click)="openParticipantProfile(show_group_details)"> <!-- when chat is group chat -->
+              <mat-icon>info</mat-icon>
+              <span>Group Details</span>
             </button>
           </mat-menu>
         </div>
@@ -66,5 +66,24 @@
   </mat-dialog-content>
   <mat-dialog-actions align="center">
     <button class="close-btn" mat-button mat-dialog-close>Close</button>
+  </mat-dialog-actions>
+</ng-template>
+
+<ng-template #show_group_details>
+  <h2 mat-dialog-title class="size-3">Group Details</h2>
+  <mat-dialog-content>
+    <div class="profile-head">
+      <img class="profile-img" src="{{ selectedChat?.groupImg }}" alt="profile-img">
+      <div class="profile-inner">
+        <p class="profile-name ellipsis" *ngIf="!groupDetailsEdit">{{ selectedChat?.chatName }}</p>
+        <input class="profile-input" *ngIf="groupDetailsEdit" [(ngModel)]="newGroupName">
+        <p class="profile-email ellipsis">Since {{ selectedChat?.createdAt | date:'dd-MMM-yyyy' }}</p>
+      </div>
+    </div>
+  </mat-dialog-content>
+  <mat-dialog-actions align="center">
+    <button class="create-btn" mat-button *ngIf="!groupDetailsEdit" (click)="editGroupDetails()">Edit</button>
+    <button class="create-btn" mat-button *ngIf="groupDetailsEdit" (click)="updateGroup()">Update</button>
+    <button class="close-btn ml-1" mat-button mat-dialog-close>Close</button>
   </mat-dialog-actions>
 </ng-template>

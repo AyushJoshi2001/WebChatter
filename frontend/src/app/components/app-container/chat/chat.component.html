@@ -111,15 +111,15 @@
       <img class="profile-img" src="{{ user?.profileImg }}" alt="profile-img">
       <div class="profile-inner">
         <p class="profile-name ellipsis" *ngIf="!profileEdit">{{ user?.name }}</p>
-        <input class="profile-name ellipsis" *ngIf="profileEdit" [(ngModel)]="newName">
+        <input class="profile-input" *ngIf="profileEdit" [(ngModel)]="newName">
         <p class="profile-email ellipsis">{{ user?.email }}</p>
         <p class="profile-email ellipsis">Since {{ user?.createdAt | date:'dd-MMM-yyyy' }}</p>
       </div>
     </div>
   </mat-dialog-content>
   <mat-dialog-actions align="center">
-    <!-- <button class="create-btn" mat-button *ngIf="!profileEdit" (click)="editProfile()">Edit</button>
-    <button class="create-btn" mat-button *ngIf="profileEdit" (click)="updateProfile()">Update</button> -->
+    <button class="create-btn" mat-button *ngIf="!profileEdit" (click)="editProfile()">Edit</button>
+    <button class="create-btn" mat-button *ngIf="profileEdit" (click)="updateProfile()">Update</button>
     <button class="close-btn ml-1" mat-button mat-dialog-close>Close</button>
   </mat-dialog-actions>
 </ng-template>

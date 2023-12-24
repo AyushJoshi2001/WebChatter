@@ -38,16 +38,10 @@ const accessChat = asyncHandler(async (req, res, next) => {
             isGroupChat: false,
             participants: [ownerId, partnerId]
         }
+        const createdChat = await Chat.create(chatData);
 
-        try {
-            const createdChat = await Chat.create(chatData);
-
-            const newlyCreatedChat = await Chat.findOne({ _id: createdChat._id }).populate('participants', '-password');
-            res.status(200).json(newlyCreatedChat);
-        } catch(err) {
-            res.status(400);
-            throw new Error(err.message);
-        }
+        const newlyCreatedChat = await Chat.findOne({ _id: createdChat._id }).populate('participants', '-password');
+        res.status(200).json(newlyCreatedChat);
     }
 })
 
@@ -74,10 +68,13 @@ const createGroupChat = asyncHandler(async (req, res, next) => {
     const groupMembers = req.body.groupMembers;
     const groupName = req.body.groupName;
     if(!groupMembers || groupMembers.length<2) {
-        res.status(400).json('Atleast 3 member needed to create a group chat');
+        res.status(400).json('Atleast 3 member needed to create a group chat.');
     }
     if(!groupName) {
-        res.status(400).json('Group name not found');
+        res.status(400).json('Group name not found.');
+    }
+    if(groupName.length<3) {
+        res.status(400).json('Group name should have atleast 3 characters.');
     }
 
     let groupChatDetails = {
@@ -209,11 +206,35 @@ const addToGroup = asyncHandler(async (req, res, next) => {
     res.status(200).json(addMemberToGroup);
 })
 
+const updateChatDetails = asyncHandler(async (req, res, next) => {
+    console.log('updateChatDetails is called');
+
+    const user = req.user;
+    const chatName = req.body.chatName;
+    const groupChatImg = req.body.groupImg;
+    const chatId = req.body.chatId;
+
+    if(!chatName || chatName.length<3) {
+        res.status(400).json('Chat name should have atleast 3 characters.')
+    }
+    const chat = await Chat.findOneAndUpdate(
+        { _id:chatId, isGroupChat: true, groupAdmin: user._id },
+        { chatName: chatName, groupImg: groupChatImg },
+        { new: true }
+    );
+
+    if(!chat) {
+        req.status(400).json('Chat not updated.');
+    }
+    res.status(200).json(chat);
+})
+
 module.exports = { 
     accessChat,
     fetchChats,
     createGroupChat,
     renameGroup,
     removeFromGroup,
-    addToGroup
+    addToGroup,
+    updateChatDetails
 }

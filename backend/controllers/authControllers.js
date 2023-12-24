@@ -10,16 +10,16 @@ const registerUser = asyncHandler(async (req, res) => {
 
     if(!name || !email || !password) {
         if(!name) {
-            res.status(400).json('Name is missing.');    
-            throw new Error('Name is missing.')
+            res.status(400).json('Name is missing.');
+        }
+        if(name.length<3) {
+            res.status(400).json('Name should have atleast 3 characters.');
         }
         if(!email) {
-            res.status(400).json('Email is missing.');    
-            throw new Error('Email is missing.')
+            res.status(400).json('Email is missing.');
         }
         if(!password) {
-            res.status(400).json('Password is missing.');    
-            throw new Error('Password is missing.')
+            res.status(400).json('Password is missing.');
         }
     }
 
@@ -27,7 +27,6 @@ const registerUser = asyncHandler(async (req, res) => {
     const isUserAlreayExist = await User.exists({email: email});
     if(isUserAlreayExist) {
         res.status(400).json('User already exist.');
-        throw new Error('User already exist.');
     }
 
     // encrypting the password
@@ -47,12 +46,10 @@ const loginUser = asyncHandler(async (req, res) => {
 
     if(!email || !password) {
         if(!email) {
-            res.status(400).json('Email is missing.');    
-            throw new Error('Email is missing.')
+            res.status(400).json('Email is missing.');
         }
         if(!password) {
-            res.status(400).json('Password is missing.');    
-            throw new Error('Password is missing.')
+            res.status(400).json('Password is missing.');
         }
     }
 
@@ -61,11 +58,9 @@ const loginUser = asyncHandler(async (req, res) => {
 
     if(!user || (user && user.length===0)) {
         res.status(404).json('User not found');
-        throw new Error('User not found');
     }
     if(user && user.length>1) {
         res.status(400).json('Duplicate user found');
-        throw new Error('Duplicate user found');
     }
 
     let userObj = user[0];
@@ -74,7 +69,6 @@ const loginUser = asyncHandler(async (req, res) => {
     const validateUser = await bcrypt.compare(password, userObj?.password);
     if(!validateUser) {
         res.status(401).json('Email or Password invalid');
-        throw new Error('Email or Password invalid');
     }
 
     // generating jwt token.

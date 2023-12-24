@@ -4,5 +4,6 @@ const baseUrl = BASE_URL + '/api/chat';
 export const chatRoutes = {
   'FETCH_ALL_CHATS' : baseUrl,
   'ACCESS_INDIVIDUAL_CHAT' : baseUrl,
-  'CREATE_GROUP_CHAT' : baseUrl + '/createGroup'
+  'CREATE_GROUP_CHAT' : baseUrl + '/createGroup',
+  'UPDATE_GROUP_CHAT' : baseUrl + '/update'
 }

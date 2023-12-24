@@ -38,6 +38,7 @@ export class ChatComponent implements OnInit {
 
   ngOnInit(): void {
     this.getUser();
+    this.getAllChats();
     this.fetchAllChats();
     this.getSelectedChat();
   }
@@ -116,10 +117,18 @@ export class ChatComponent implements OnInit {
   fetchAllChats() {
     this.chatService.fetchAllChats().subscribe(
       (response: Chat[]) => {
-        this.chats = response;
+        this.chatService.setAllChats(response);
       },
       (error: HttpErrorResponse) => {
         this.openSnackBar(error?.error, 'Ok');
+      }
+    )
+  }
+
+  getAllChats() {
+    this.chatService.getAllChats().subscribe(
+      (data: Chat[]) => {
+        this.chats = data;
       }
     )
   }
@@ -235,7 +244,19 @@ export class ChatComponent implements OnInit {
   }
 
   updateProfile() {
-    
+    let payload = {
+      name: this.newName,
+      profileImg: this.user?.profileImg
+    }
+    this.userService.updateProfile(payload).subscribe(
+      (response: User) => {
+        this.userService.setUser(response);
+        this.profileEdit = false;
+      },
+      (error: HttpErrorResponse) => {
+        this.openSnackBar(error?.error, 'Ok');
+      }
+    )
   }
 
   resetProfileDialog() {

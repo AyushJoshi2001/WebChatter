@@ -41,7 +41,25 @@ const searchUser = asyncHandler(async (req, res, next) => {
     res.status(200).json(users);
 })
 
+const updateProfile = asyncHandler(async (req, res, next) => {
+    console.log('updateProfile is called');
+    
+    const user = req.user;
+    const name = req.body.name;
+    const profileImg = req.body.profileImg;
+
+    if(!name || name.length<3) {
+        res.status(400).json('Name should have atleast 3 characters');
+    }
+    const userData = await User.findByIdAndUpdate(user._id, { name: name, profileImg: profileImg }, { new: true });
+    if(!userData) {
+        res.status(400).json('User not found');
+    }
+    res.status(200).json(userData);
+})
+
 module.exports = { 
     getProfile, 
-    searchUser 
+    searchUser,
+    updateProfile
 }
