@@ -32,8 +32,17 @@
   </div>
 
   <div class="message-body">
-    <div *ngIf="messages && messages.length>0; else no_message">
-
+    <div class="message-container" *ngIf="messages && messages.length>0; else no_message">
+      <div class="relative" *ngFor="let message of messages; let i=index">
+        <button #loadMore id="loadMore" *ngIf="i===messages.length-1 && !noMoreMessageFound" (click)="increaseMessagePageNo()">load</button>
+        <div class="message-content" [ngClass]="{'right-align': message.sender._id===user?._id,  'left-align' : message.sender._id!==user?._id }">
+          <div class="message-info">
+            <p class="sender-name">{{ message.sender.name }}</p>
+            <p class="m-0">{{ message && currentDate <= getInMilli(message.createdAt) ? (message.createdAt | date:'hh:mm a') : (message?.createdAt | date:'dd/MMM/yyyy') }}</p>
+          </div>
+          <p>{{ message.content }}</p>
+        </div>
+      </div>
     </div>
     <ng-template #no_message>
       <p class="lg-text">Start the conversation... 💫</p>
@@ -42,9 +51,9 @@
 
   <div>
     <hr>
-    <form class="bottom-div">
-      <input class="msg-input" type="text" name="newMessage" id="newMessage" placeholder="Type your message...">
-      <button class="basic-icon-button" type="submit"><mat-icon class="font-icon-md">send</mat-icon></button>
+    <form class="bottom-div" (onsubmit)="sendMessage($event)">
+      <input class="msg-input" type="text" name="newMessage" id="newMessage" [(ngModel)]="newMessage" placeholder="Type your message...">
+      <button class="basic-icon-button" type="submit" (click)="sendMessage($event)"><mat-icon class="font-icon-md">send</mat-icon></button>
     </form>
   </div>
 </div>

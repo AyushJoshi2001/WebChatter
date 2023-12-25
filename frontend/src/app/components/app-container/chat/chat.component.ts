@@ -134,7 +134,9 @@ export class ChatComponent implements OnInit {
   }
 
   selectChat(chat: Chat) {
-    this.chatService.setSelectedChat(chat);
+    if(this.selectedChat?._id!==chat._id) {
+      this.chatService.setSelectedChat(chat);
+    }
   }
 
   getSelectedChat() {
@@ -152,7 +154,9 @@ export class ChatComponent implements OnInit {
       if(chat.isGroupChat) continue;
       for(let participant of chat.participants) {
         if(participant._id===user._id) {
-          this.chatService.setSelectedChat(chat);
+          if(this.selectedChat?._id!==chat._id) {
+            this.chatService.setSelectedChat(chat);
+          }
           isChatAvaliable = true;
           break;
         }
@@ -164,9 +168,11 @@ export class ChatComponent implements OnInit {
         'userId': user._id
       }
       this.chatService.accessIndividualChat(payload).subscribe(
-        (resonse: Chat) => {
-          this.chats = [resonse, ...this.chats];
-          this.chatService.setSelectedChat(resonse);
+        (response: Chat) => {
+          this.chats = [response, ...this.chats];
+          if(this.selectedChat?._id!==response._id) {
+            this.chatService.setSelectedChat(response);
+          }
         },
         (error: HttpErrorResponse) => {
           this.openSnackBar(error?.error, 'Ok');
@@ -215,7 +221,9 @@ export class ChatComponent implements OnInit {
         this.dialog.closeAll();
         this.fetchAllChats();
         if(response && response.length>0) {
-          this.chatService.setSelectedChat(response[0]);
+          if(this.selectedChat?._id!==response[0]._id) {
+            this.chatService.setSelectedChat(response[0]);
+          }
         }
       },
       (error: HttpErrorResponse) => {

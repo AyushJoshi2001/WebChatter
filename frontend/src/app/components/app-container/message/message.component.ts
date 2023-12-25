@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component,ViewChild, OnInit, ElementRef, OnDestroy } from '@angular/core';
 import { UserService } from '../../../services/user/user.service';
 import { Chat } from '../../../Utils/interfaces/Chat';
 import { ChatService } from '../../../services/chat/chat.service';
@@ -7,14 +7,15 @@ import { User } from '../../../Utils/interfaces/User';
 import { MatDialog } from '@angular/material/dialog';
 import { HttpErrorResponse } from '@angular/common/http';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { MessageService } from '../../../services/message/message.service';
 
 @Component({
   selector: 'app-message',
   templateUrl: './message.component.html',
   styleUrl: './message.component.css'
 })
-export class MessageComponent implements OnInit {
-
+export class MessageComponent implements OnInit, OnDestroy {
+  @ViewChild('loadMore') loadMore!: ElementRef;
   messages: Message[] = [];
   selectedChat: Chat|null = null;
   user: User|null = null;
@@ -26,17 +27,31 @@ export class MessageComponent implements OnInit {
   userSearchPageNo: number = 1;
   userSearchPageSize: number = 10;
   noMoreResultsFound: boolean = false;
+  messagePageNo: number = 1;
+  messagePageSize: number = 10;
+  noMoreMessageFound: boolean = false;
+  newMessage: string = '';
+  currentDate: number = 0;
+  observer!: IntersectionObserver|null;
 
   constructor(
     private userService: UserService,
     private chatService: ChatService,
     private dialog: MatDialog,
-    private _snackBar: MatSnackBar
+    private _snackBar: MatSnackBar,
+    private messageService: MessageService
   ) { }
   
   ngOnInit(): void {
+    this.currentDate = new Date().setHours(0, 0, 0, 0);
     this.getUser();
     this.getSelectedChat();
+  }
+
+  ngOnDestroy(): void {
+    if(this.observer) {
+      this.observer.unobserve(this.loadMore.nativeElement);
+    }
   }
 
   toggleSideNav() {
@@ -57,13 +72,18 @@ export class MessageComponent implements OnInit {
     this.chatService.getSelectedChat().subscribe(
       (data: Chat|null) => {
         if(data) {
+          this.messages = [];
+          this.observer = null;
           this.selectedChat = data;
+          this.messagePageNo = 1;
+          this.newMessage = '';
+          this.getMessage();
         }
       }
     )
   }
 
-  getChatName(): string{
+  getChatName(): string {
     if(!this.selectedChat) return '';
 
     if(!this.selectedChat.isGroupChat) {
@@ -230,5 +250,73 @@ export class MessageComponent implements OnInit {
         this.openSnackBar(error?.error, 'Ok');
       }
     )
+  }
+
+  sendMessage(event: Event) {
+    event.preventDefault();
+    let payload = {
+      chatId: this.selectedChat?._id,
+      content: this.newMessage
+    }
+    this.messageService.sendMessage(payload).subscribe(
+      (response: Message) => {
+        this.newMessage = '';
+        this.messages = [response, ...this.messages];
+      },
+      (error: HttpErrorResponse) => {
+        this.openSnackBar(error?.error, 'Ok');
+      }
+    )
+  }
+
+  getMessage() {
+    let payload = {
+      chatId: this.selectedChat?._id,
+      pageNo: this.messagePageNo,
+      pageSize: this.messagePageSize
+    }
+    this.messageService.getMessage(payload).subscribe(
+      (response: Message[]) => {
+        if(response.length===0) {
+          this.noMoreMessageFound = true;
+        } else {
+          this.noMoreMessageFound = false;
+        }
+        this.messages.push(...response);
+        if(!this.observer && this.messages.length>0) {
+          setTimeout(() => {
+            this.intersectionObserver();
+            if(this.observer) {
+              this.observer.observe(this.loadMore.nativeElement);
+            }
+          }, 0);
+        }
+      },
+      (error: HttpErrorResponse) => {
+        this.openSnackBar(error?.error, 'Ok');
+      }
+    )
+  }
+
+  getInMilli(date: Date): number {
+    if(!date) return 0;
+    let d = new Date(date).getTime();
+    return d;
+  }
+
+  intersectionObserver() {
+    let options = {
+      threshold: 0.5,
+    };
+    this.observer = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting) {
+        this.increaseMessagePageNo();
+      }
+    }, options);
+  }
+
+  increaseMessagePageNo() {
+    this.messagePageNo++;
+    this.getMessage();
   }
 }

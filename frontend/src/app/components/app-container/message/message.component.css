@@ -374,6 +374,59 @@ hr {
   border: none;
 }
 
+.message-container {
+  display: flex;
+  flex-direction: column-reverse;
+  width: 100%;
+  overflow: auto;
+  padding: 1rem;
+}
+
+.message-container::-webkit-scrollbar {
+  display: none;
+}
+
+.left-align {
+  float: left;
+}
+
+.right-align {
+  float: right;
+}
+
+.message-content {
+  background-color: #F0F8FF;
+  margin-top: 1rem;
+  border-radius: 1rem;
+  padding: 1rem;
+  max-width: 50%;
+  word-wrap: break-word;
+}
+
+.relative {
+  position: relative;
+}
+
+.message-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
+.sender-name {
+  font-weight: 600;
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 13rem;
+}
+
+#loadMore {
+  visibility: hidden;
+}
+
 @media only screen and (max-width: 800px) {
   .back-button {
     display: block;
