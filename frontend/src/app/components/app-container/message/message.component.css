@@ -21,7 +21,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border: 2px solid #b0b0b0;
+  border: 2px solid #1EBBD7;
   border-radius: 10rem;
 }
 
@@ -89,6 +89,7 @@ hr {
   height: 1.8rem;
   width: 1.8rem;
   font-size: 1.8rem;
+  color: #1EBBD7;
 }
 
 .no-text {
@@ -395,7 +396,8 @@ hr {
 }
 
 .message-content {
-  background-color: #F0F8FF;
+  background-color: #1EBBD7;
+  color: #FFFFFF;
   margin-top: 1rem;
   border-radius: 1rem;
   padding: 1rem;
