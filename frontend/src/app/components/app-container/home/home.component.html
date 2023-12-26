@@ -1,6 +1,6 @@
 <div class="main-container">
   <mat-sidenav-container class="sidenav-container" autosize>
-    <mat-sidenav #drawer class="sidenav" mode="side" [opened]="openSideNav">
+    <mat-sidenav #drawer class="sidenav" [ngClass]="{'fullscreen-nav b-0': !isDesktop}" [mode]="isDesktop ? 'side' : 'over'" [opened]="openSideNav">
       <app-chat></app-chat>
     </mat-sidenav>
     <mat-sidenav-content>

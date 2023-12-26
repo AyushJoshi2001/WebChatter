@@ -7,6 +7,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ChatService } from '../../../services/chat/chat.service';
 import { Chat } from '../../../Utils/interfaces/Chat';
+import { AppService } from '../../../services/app/app.service';
 
 @Component({
   selector: 'app-chat',
@@ -27,13 +28,16 @@ export class ChatComponent implements OnInit {
   noMoreResultsFound: boolean = false;
   profileEdit: boolean = false;
   newName: string = '';
+  isDesktop: boolean = false;
+  sideNavOpened: boolean = false;
 
   constructor(
     private authService: AuthService,
     private userService: UserService,
     private dialog: MatDialog,
     private _snackBar: MatSnackBar,
-    private chatService: ChatService
+    private chatService: ChatService,
+    private appService: AppService
   ) { }
 
   ngOnInit(): void {
@@ -41,6 +45,7 @@ export class ChatComponent implements OnInit {
     this.getAllChats();
     this.fetchAllChats();
     this.getSelectedChat();
+    this.getIsDesktop();
   }
 
   getUser() {
@@ -54,6 +59,22 @@ export class ChatComponent implements OnInit {
   }
   logout() {
     this.authService.logout();
+  }
+
+  getIsDesktop() {
+    this.appService.getIsDesktop().subscribe(
+      (response: boolean) => {
+        this.isDesktop = response;
+      }
+    )
+  }
+
+  getToggleSideNav() {
+    this.appService.getToggleSideNav().subscribe(
+      (response: boolean) => {
+        this.sideNavOpened = response;
+      }
+    )
   }
   
   openDialog(context: any) {
@@ -134,8 +155,9 @@ export class ChatComponent implements OnInit {
   }
 
   selectChat(chat: Chat) {
-    if(this.selectedChat?._id!==chat._id) {
-      this.chatService.setSelectedChat(chat);
+    this.chatService.setSelectedChat(chat);
+    if(!this.isDesktop) {
+      this.appService.setToggleSideNav(false);
     }
   }
 

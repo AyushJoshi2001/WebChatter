@@ -8,6 +8,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { HttpErrorResponse } from '@angular/common/http';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MessageService } from '../../../services/message/message.service';
+import { AppService } from '../../../services/app/app.service';
 
 @Component({
   selector: 'app-message',
@@ -33,19 +34,23 @@ export class MessageComponent implements OnInit, OnDestroy {
   newMessage: string = '';
   currentDate: number = 0;
   observer!: IntersectionObserver|null;
+  allChats: Chat[] = [];
+  sideNavOpened: boolean = false;
 
   constructor(
     private userService: UserService,
     private chatService: ChatService,
     private dialog: MatDialog,
     private _snackBar: MatSnackBar,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private appService: AppService
   ) { }
   
   ngOnInit(): void {
     this.currentDate = new Date().setHours(0, 0, 0, 0);
     this.getUser();
     this.getSelectedChat();
+    this.fetchAllChats();
   }
 
   ngOnDestroy(): void {
@@ -55,7 +60,15 @@ export class MessageComponent implements OnInit, OnDestroy {
   }
 
   toggleSideNav() {
-    this.userService.setToggleSideNav();
+    this.appService.setToggleSideNav(!this.sideNavOpened);
+  }
+
+  getToggleSideNav() {
+    this.appService.getToggleSideNav().subscribe(
+      (response: boolean) => {
+        this.sideNavOpened = response;
+      }
+    )
   }
 
   getUser() {
@@ -145,7 +158,7 @@ export class MessageComponent implements OnInit, OnDestroy {
     this.chatService.updateGroupChat(payload).subscribe(
       (response: Chat) => {
         this.chatService.setSelectedChat(response);
-        this.fetchAllChats();
+        this.updateChatLocally(response);
         this.groupDetailsEdit = false;
       },
       (error: HttpErrorResponse) => {
@@ -161,14 +174,25 @@ export class MessageComponent implements OnInit, OnDestroy {
   }
 
   fetchAllChats() {
-    this.chatService.fetchAllChats().subscribe(
+    this.chatService.getAllChats().subscribe(
       (response: Chat[]) => {
-        this.chatService.setAllChats(response);
+        this.allChats = response;
       },
       (error: HttpErrorResponse) => {
         this.openSnackBar(error?.error, 'Ok');
       }
     )
+  }
+
+  updateChatLocally(updatedChat: Chat) {
+    if(this.allChats.length>0) {
+      for(let i=0; i<this.allChats.length; i++) {
+        if(this.allChats[i]._id===updatedChat._id) {
+          this.allChats[i] = updatedChat;
+          this.chatService.setAllChats(this.allChats);
+        }
+      }
+    }
   }
 
   onSearchKeyChange() {

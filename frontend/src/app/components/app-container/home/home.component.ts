@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { UserService } from '../../../services/user/user.service';
+import { AppService } from '../../../services/app/app.service';
 
 @Component({
   selector: 'app-home',
@@ -8,19 +8,30 @@ import { UserService } from '../../../services/user/user.service';
 })
 export class HomeComponent implements OnInit {
   openSideNav: boolean = false;
+  isDesktop: boolean = false;
 
-  constructor(private userService: UserService) { }
+  constructor(
+    private appService: AppService
+  ) { }
 
   ngOnInit(): void {
     this.sideNavObserver();
+    this.getIsDesktop();
   }
 
   sideNavObserver() {
-    this.userService.getToggleSideNav().subscribe(
-      (res: Boolean) => {
-        this.openSideNav = !this.openSideNav;
+    this.appService.getToggleSideNav().subscribe(
+      (response: boolean) => {
+        this.openSideNav = response;
       }
     )
   }
 
+  getIsDesktop() {
+    this.appService.getIsDesktop().subscribe(
+      (response: boolean) => {
+        this.isDesktop = response;
+      }
+    )
+  }
 }

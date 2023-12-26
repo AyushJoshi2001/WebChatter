@@ -12,3 +12,12 @@
   border-right: 2px solid lightgray;
   border-radius: 0 2rem 2rem 0;
 }
+
+.fullscreen-nav{
+  width: 100vw !important;
+  height: 100vh !important;
+}
+
+.b-0 {
+  border-radius: 0 !important;
+}

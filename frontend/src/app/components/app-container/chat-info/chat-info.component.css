@@ -45,3 +45,10 @@
   font-size: 0.9rem;
   margin: 0;
 }
+
+@media only screen and (max-width: 800px) {
+  .chat-info {
+    overflow: hidden;
+    max-width: 100%;
+  }
+}
