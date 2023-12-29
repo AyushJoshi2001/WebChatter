@@ -46,6 +46,14 @@
   margin: 0;
 }
 
+.mr-1 {
+  margin-right: 0.2rem;
+}
+
+.name-sm {
+  font-weight: bold;
+}
+
 @media only screen and (max-width: 800px) {
   .chat-info {
     overflow: hidden;

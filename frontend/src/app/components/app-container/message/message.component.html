@@ -40,7 +40,7 @@
             <p class="sender-name">{{ message.sender.name }}</p>
             <p class="m-0">{{ message && currentDate <= getInMilli(message.createdAt) ? (message.createdAt | date:'hh:mm a') : (message?.createdAt | date:'dd/MMM/yyyy') }}</p>
           </div>
-          <p>{{ message.content }}</p>
+          <p class="m-0">{{ message.content }}</p>
         </div>
       </div>
     </div>

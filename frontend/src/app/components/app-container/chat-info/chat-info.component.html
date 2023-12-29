@@ -5,6 +5,6 @@
       <h3 class="chat-name">{{ getChatName() }}</h3>
       <p class="font-sm">{{ chat && currentDate <= getInMilli(chat.updatedAt) ? (chat.updatedAt | date:'hh:mm a') : (chat?.updatedAt | date:'dd/MMM/yyyy') }}</p>
     </div>
-    <p class="chat-desc">{{ chat?.latestMessage?.content }}</p>
+    <p class="chat-desc" *ngIf="chat?.latestMessage"><span class="mr-1 name-sm">{{ chat?.latestMessage?.sender?.name }}:</span>{{ chat?.latestMessage?.content }}</p>
   </div>
 </div>
