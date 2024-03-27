@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AUTH_TOKEN } from '../../../../assets/constant';
 import { AppService } from '../../../services/app/app.service';
+import { SocketService } from '../../../services/socket/socket.service';
 
 @Component({
   selector: 'app-app-container',
@@ -19,7 +20,8 @@ export class AppContainerComponent implements OnInit {
     private userService: UserService,
     private _snackBar: MatSnackBar,
     private router: Router,
-    private appService: AppService
+    private appService: AppService,
+    private socketService: SocketService
   ) { }
 
   ngOnInit(): void { 
@@ -30,6 +32,7 @@ export class AppContainerComponent implements OnInit {
     if(localStorage.getItem(AUTH_TOKEN)) {
       this.getProfile();
       this.getToggleSideNav();
+      this.initializeSocket();
     }
     else {
       this.router.navigateByUrl('/auth/login');
@@ -72,5 +75,9 @@ export class AppContainerComponent implements OnInit {
     this._snackBar.open(message, action, {
       duration: 3000
     });
+  }
+
+  initializeSocket() {
+    this.socketService.initializeSocket();
   }
 }

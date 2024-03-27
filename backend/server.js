@@ -3,11 +3,23 @@ const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+const { Server } = require("socket.io");
+const http = require("http");
 const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes');
 const chatRoutes = require('./routes/chatRoutes');
 const messageRoutes = require('./routes/messageRoutes');
 const allowCrossDomain = require('./utils/corsHandler');
+const { authorizeSocketRequest } = require('./middleware/socketAuth');
+
+const server = http.createServer(app);
+const io = new Server(server, {
+  cors: {
+    origin: 'http://localhost:4200',
+    methods: ['PUT, POST, DELETE, GET'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+  }
+});
 
 mongoose.connect(process.env.MONGODB_DATABASE_URI).then(() => {
   console.log('Connected to the database');
@@ -26,6 +38,20 @@ app.use((err, req, res, next) => {
   res.status(500).send('Something went wrong!');
 });
 
-app.listen(process.env.PORT || 5000 ,() => {
+io.use(authorizeSocketRequest);
+
+io.on('connection', (socket) => {
+  console.log('a user connected');
+  socket.on('new-message', (data) => {
+    console.log('new message => ', data);
+    socket.emit('recieved-new-message', data);
+  })
+})
+
+io.on('error', (error) => {
+  console.error('Socket.IO error:', error);
+});
+
+server.listen(process.env.PORT || 5000, () => {
   console.log(`Server is running on port:${process.env.PORT || 5000}...`);
 })

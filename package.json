@@ -3,9 +3,10 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "frontend": "cd frontend && ng serve --open",
+    "frontend": "cd frontend && ng serve",
     "backend": "node backend/server.js",
-    "dev-backend": "nodemon backend/server.js"
+    "dev-backend": "nodemon backend/server.js",
+    "dev-frontend": "cd frontend && ng serve --open"
   },
   "dependencies": {
     "bcrypt": "^5.1.1",
@@ -13,7 +14,8 @@
     "express": "~4.16.1",
     "express-async-handler": "^1.2.0",
     "jsonwebtoken": "^9.0.2",
-    "mongoose": "^8.0.0"
+    "mongoose": "^8.0.0",
+    "socket.io": "^4.7.5"
   },
   "devDependencies": {
     "nodemon": "^3.0.1"
