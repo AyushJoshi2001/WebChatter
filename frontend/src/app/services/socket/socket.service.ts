@@ -17,21 +17,37 @@ export class SocketService {
       token = JSON.parse(token);
     }
     this.socket = io('http://localhost:8080', { extraHeaders: { 'Authorization': `Bearer ${token}` } });
+  
+    this.socket.on('get-new-message', (data: any) => {
+      console.log('Received new message:', data);
+    });
+
+    this.socket.on('connect_error', (error: any) => {
+      console.error('Socket connection error:', error);
+    });
+
+    this.socket.on('connect_timeout', (timeout: any) => {
+      console.error('Socket connection timeout:', timeout);
+    });
   }
 
   getTokenFromLocalStorage(): string | null {
     return localStorage.getItem(AUTH_TOKEN);
   }
 
-  sendMessage(payload: any) {
-    this.socket.emit('new-message', payload);
+  sendMessage(data: { chatId: any, content: string }) {
+    if(this.socket) {
+      this.socket.emit('new-message', data);
+    }
   }
 
   getMessageFromSocket() {
     let observable = new Observable<{ user: String, message: String }>(observer => {
-      this.socket.on('recieved-new-message', (data: any) => {
-        observer.next(data);
-      });
+      if(this.socket) {
+        this.socket.on('recieved-new-message', (data: any) => {
+          observer.next(data);
+        });
+      }
 
       // Define teardown logic for the observable
       return () => {
@@ -41,5 +57,17 @@ export class SocketService {
       };
     });
     return observable;
+  }
+  
+  joinChatRoom(chatId: any) {
+    if(this.socket) {
+      this.socket.emit('join-chat-room', chatId);
+    }
+  }
+
+  leaveChatRoom(chatId: any) {
+    if(this.socket) {
+      this.socket.emit('leave-chat-room', chatId);
+    }
   }
 }

@@ -63,6 +63,8 @@ const getMessages = asyncHandler(async (req, res, next) => {
     const chatId = req.params.chatId;
     let pageNo = req.query.pageNo;
     let pageSize = req.query.pageSize;
+    let additionalOffset = req.query.additionalOffset;
+    console.log('additionalOffset => ', additionalOffset);
     if(!chatId) {
         res.status(400).json('chatId is missing');
     }
@@ -71,6 +73,9 @@ const getMessages = asyncHandler(async (req, res, next) => {
     }
     if(!pageSize) {
         pageSize = 10;
+    }
+    if(!additionalOffset) {
+        additionalOffset = 0;
     }
 
     const chat = await Chat.find(
@@ -88,16 +93,63 @@ const getMessages = asyncHandler(async (req, res, next) => {
         res.status(400).json('Chat not found with the given id');
     }
 
+    const offset = ((parseInt(pageNo)-1)*parseInt(pageSize))+parseInt(additionalOffset);
+    console.log('offset => ', offset);
     const messages = await Message.find({ chatInfo: chatId })
         .sort({createdAt: -1})
-        .skip((pageNo-1)*pageSize)
+        .skip(offset)
         .limit(pageSize)
         .populate('sender', '-password');
 
     res.status(200).json(messages); 
 })
 
+const addMessageFromSocket = asyncHandler(async (chatId, content, userId) => {
+    console.log('addMessage is called');
+
+    if(!chatId) {
+        throw new Error('chatId is missing');
+    }
+    if(!content) {
+        throw new Error('content is missing');
+    }
+
+    const chat = await Chat.find(
+        { 
+            _id: chatId,
+            $or: [
+                { participants: { $elemMatch: { $eq: userId } } },
+                { groupAdmin: userId }
+            ]  
+        
+        }
+    );
+
+    if(!chat || chat.length===0) {
+        throw new Error('Chat not found with the given id');
+    }
+
+    const messageObj = {
+        sender: userId,
+        content: content,
+        chatInfo: chatId
+    }
+
+    let saveMessageToDB = await Message.create(messageObj);
+    saveMessageToDB = await Message.populate(saveMessageToDB, [
+        {
+            path: 'sender',
+            select: '-password'
+        }
+    ]);
+
+    const currentTime = Date.now();
+    await Chat.findByIdAndUpdate(chatId, { latestMessage: saveMessageToDB._id, updatedAt: currentTime } );
+    return saveMessageToDB;
+})
+
 module.exports = {
     saveMessage,
-    getMessages
+    getMessages,
+    addMessageFromSocket
 }

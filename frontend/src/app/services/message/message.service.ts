@@ -23,6 +23,7 @@ export class MessageService {
     route = route.replace(':CHAT_ID', payload.chatId);
     route = route.replace(':PAGE_NO', payload.pageNo);
     route = route.replace(':PAGE_SIZE', payload.pageSize);
+    route = route.replace(':ADDITIONAL_OFFSET', payload.additionalOffset);
     return this.http.get<Message[]>(route);
   }
 }

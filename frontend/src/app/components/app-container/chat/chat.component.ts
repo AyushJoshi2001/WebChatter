@@ -8,6 +8,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { ChatService } from '../../../services/chat/chat.service';
 import { Chat } from '../../../Utils/interfaces/Chat';
 import { AppService } from '../../../services/app/app.service';
+import { SocketService } from '../../../services/socket/socket.service';
 
 @Component({
   selector: 'app-chat',
@@ -37,7 +38,8 @@ export class ChatComponent implements OnInit {
     private dialog: MatDialog,
     private _snackBar: MatSnackBar,
     private chatService: ChatService,
-    private appService: AppService
+    private appService: AppService,
+    private socketService: SocketService
   ) { }
 
   ngOnInit(): void {
@@ -155,6 +157,12 @@ export class ChatComponent implements OnInit {
   }
 
   selectChat(chat: Chat) {
+    if(this.selectedChat?._id!==chat._id) {
+      if(this.selectedChat) {
+        this.socketService.leaveChatRoom(this.selectedChat._id);
+      }
+      this.socketService.joinChatRoom(chat._id);
+    }
     this.chatService.setSelectedChat(chat);
     if(!this.isDesktop) {
       this.appService.setToggleSideNav(false);
@@ -177,6 +185,8 @@ export class ChatComponent implements OnInit {
       for(let participant of chat.participants) {
         if(participant._id===user._id) {
           if(this.selectedChat?._id!==chat._id) {
+            this.socketService.leaveChatRoom(this.selectedChat?._id);
+            this.socketService.joinChatRoom(chat._id);
             this.chatService.setSelectedChat(chat);
           }
           isChatAvaliable = true;
@@ -193,6 +203,8 @@ export class ChatComponent implements OnInit {
         (response: Chat) => {
           this.chats = [response, ...this.chats];
           if(this.selectedChat?._id!==response._id) {
+            this.socketService.leaveChatRoom(this.selectedChat?._id);
+            this.socketService.joinChatRoom(response._id);
             this.chatService.setSelectedChat(response);
           }
         },
@@ -244,6 +256,8 @@ export class ChatComponent implements OnInit {
         this.fetchAllChats();
         if(response && response.length>0) {
           if(this.selectedChat?._id!==response[0]._id) {
+            this.socketService.leaveChatRoom(this.selectedChat?._id);
+            this.socketService.joinChatRoom(response[0]._id);
             this.chatService.setSelectedChat(response[0]);
           }
         }

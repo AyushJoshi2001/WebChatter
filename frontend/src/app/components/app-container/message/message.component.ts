@@ -9,6 +9,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MessageService } from '../../../services/message/message.service';
 import { AppService } from '../../../services/app/app.service';
+import { SocketService } from '../../../services/socket/socket.service';
 
 @Component({
   selector: 'app-message',
@@ -30,6 +31,7 @@ export class MessageComponent implements OnInit, OnDestroy {
   noMoreResultsFound: boolean = false;
   messagePageNo: number = 1;
   messagePageSize: number = 10;
+  messageAdditionalOffset: number = 0;
   noMoreMessageFound: boolean = false;
   newMessage: string = '';
   currentDate: number = 0;
@@ -43,7 +45,8 @@ export class MessageComponent implements OnInit, OnDestroy {
     private dialog: MatDialog,
     private _snackBar: MatSnackBar,
     private messageService: MessageService,
-    private appService: AppService
+    private appService: AppService,
+    private socketService: SocketService
   ) { }
   
   ngOnInit(): void {
@@ -51,6 +54,7 @@ export class MessageComponent implements OnInit, OnDestroy {
     this.getUser();
     this.getSelectedChat();
     this.fetchAllChats();
+    this.getMessageFromSocket();
   }
 
   ngOnDestroy(): void {
@@ -282,22 +286,27 @@ export class MessageComponent implements OnInit, OnDestroy {
       chatId: this.selectedChat?._id,
       content: this.newMessage
     }
-    this.messageService.sendMessage(payload).subscribe(
-      (response: Message) => {
-        this.newMessage = '';
-        this.messages = [response, ...this.messages];
-      },
-      (error: HttpErrorResponse) => {
-        this.openSnackBar(error?.error, 'Ok');
-      }
-    )
+    this.socketService.sendMessage(payload);
+    this.newMessage = '';
+    // this.messageService.sendMessage(payload).subscribe(
+    //   (response: Message) => {
+    //     this.newMessage = '';
+    //     this.messages = [response, ...this.messages];
+    //   },
+    //   (error: HttpErrorResponse) => {
+    //     this.openSnackBar(error?.error, 'Ok');
+    //   }
+    // )
   }
 
   getMessage() {
     let payload = {
       chatId: this.selectedChat?._id,
       pageNo: this.messagePageNo,
-      pageSize: this.messagePageSize
+      pageSize: this.messagePageSize,
+      // if new message added through socket then we have to increase the offset
+      // so that same message should not fetch again.
+      additionalOffset: this.messageAdditionalOffset
     }
     this.messageService.getMessage(payload).subscribe(
       (response: Message[]) => {
@@ -314,6 +323,21 @@ export class MessageComponent implements OnInit, OnDestroy {
               this.observer.observe(this.loadMore.nativeElement);
             }
           }, 0);
+        }
+      },
+      (error: HttpErrorResponse) => {
+        this.openSnackBar(error?.error, 'Ok');
+      }
+    )
+  }
+
+  getMessageFromSocket() {
+    this.socketService.getMessageFromSocket().subscribe(
+      (response: any) => {
+        console.log(response);
+        if(response) {
+          this.messages.splice(0, 0, response);
+          this.messageAdditionalOffset++;
         }
       },
       (error: HttpErrorResponse) => {

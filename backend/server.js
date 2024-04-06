@@ -11,6 +11,8 @@ const chatRoutes = require('./routes/chatRoutes');
 const messageRoutes = require('./routes/messageRoutes');
 const allowCrossDomain = require('./utils/corsHandler');
 const { authorizeSocketRequest } = require('./middleware/socketAuth');
+const { isUserExistInChat } = require('./controllers/chatController');
+const { addMessageFromSocket } = require('./controllers/messageController');
 
 const server = http.createServer(app);
 const io = new Server(server, {
@@ -18,7 +20,8 @@ const io = new Server(server, {
     origin: 'http://localhost:4200',
     methods: ['PUT, POST, DELETE, GET'],
     allowedHeaders: ['Content-Type', 'Authorization']
-  }
+  },
+  pingTimeout: 60000 // if client doesn't respond within 60 seconds then close the connection
 });
 
 mongoose.connect(process.env.MONGODB_DATABASE_URI).then(() => {
@@ -42,16 +45,35 @@ io.use(authorizeSocketRequest);
 
 io.on('connection', (socket) => {
   console.log('a user connected');
-  socket.on('new-message', (data) => {
-    console.log('new message => ', data);
-    socket.emit('recieved-new-message', data);
-  })
-})
+
+  socket.on('join-chat-room', (chatId) => {
+    if(isUserExistInChat(chatId, socket.user._id)) {
+      console.log('chat room joined...', chatId);
+      socket.join(chatId);
+    }
+  });
+
+  socket.on('leave-chat-room', (chatId) => {
+    console.log('chat room left...', chatId);
+    socket.leave(chatId);
+  });
+
+  socket.on('new-message', async (data) => {
+    if(await isUserExistInChat(data.chatId, socket.user._id)) {
+      let savedMessageObj = await addMessageFromSocket(data.chatId, data.content, socket.user._id);
+      io.to(data.chatId).emit('recieved-new-message', savedMessageObj);
+    }
+  });
+  
+  socket.on("disconnect", () => {
+    console.log("user disconnected");
+  });
+});
 
 io.on('error', (error) => {
-  console.error('Socket.IO error:', error);
+  console.error('Socket.IO error123:', error);
 });
 
 server.listen(process.env.PORT || 5000, () => {
   console.log(`Server is running on port:${process.env.PORT || 5000}...`);
-})
+});

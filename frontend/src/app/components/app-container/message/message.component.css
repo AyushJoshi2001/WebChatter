@@ -391,15 +391,17 @@ hr {
 
 .left-align {
   float: left;
+  background-color: #FFFFFF;
+  color: #242323;
 }
 
 .right-align {
   float: right;
+  background-color: #1EBBD7;
+  color: #FFFFFF;
 }
 
 .message-content {
-  background-color: #1EBBD7;
-  color: #FFFFFF;
   margin-top: 1rem;
   border-radius: 1rem;
   padding: 1rem;
