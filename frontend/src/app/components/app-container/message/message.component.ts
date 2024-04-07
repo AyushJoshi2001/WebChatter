@@ -54,7 +54,6 @@ export class MessageComponent implements OnInit, OnDestroy {
     this.getUser();
     this.getSelectedChat();
     this.fetchAllChats();
-    this.getMessageFromSocket();
   }
 
   ngOnDestroy(): void {
@@ -80,6 +79,9 @@ export class MessageComponent implements OnInit, OnDestroy {
       (data: User|null) => {
         if(data) {
           this.user = data;
+          setTimeout(() => {
+            this.getMessageFromSocket();
+          });
         }
       }
     )
@@ -334,14 +336,10 @@ export class MessageComponent implements OnInit, OnDestroy {
   getMessageFromSocket() {
     this.socketService.getMessageFromSocket().subscribe(
       (response: any) => {
-        console.log(response);
         if(response) {
           this.messages.splice(0, 0, response);
           this.messageAdditionalOffset++;
         }
-      },
-      (error: HttpErrorResponse) => {
-        this.openSnackBar(error?.error, 'Ok');
       }
     )
   }

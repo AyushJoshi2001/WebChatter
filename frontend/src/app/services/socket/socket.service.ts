@@ -11,7 +11,7 @@ export class SocketService {
   
   constructor() { }
 
-  initializeSocket(): void {
+  initializeSocket(userId: any): void {
     let token = this.getTokenFromLocalStorage();
     if(token) {
       token = JSON.parse(token);
@@ -29,6 +29,8 @@ export class SocketService {
     this.socket.on('connect_timeout', (timeout: any) => {
       console.error('Socket connection timeout:', timeout);
     });
+
+    this.joinUserRoom(userId);
   }
 
   getTokenFromLocalStorage(): string | null {
@@ -41,22 +43,28 @@ export class SocketService {
     }
   }
 
-  getMessageFromSocket() {
-    let observable = new Observable<{ user: String, message: String }>(observer => {
-      if(this.socket) {
-        this.socket.on('recieved-new-message', (data: any) => {
-          observer.next(data);
-        });
+  getMessageFromSocket(): Observable<any> {
+    return new Observable<any>((observer) => {
+      if (!this.socket) {
+        observer.error('Socket is not initialized');
+        observer.complete();
+        return;
       }
-
+  
+      const receivedMessageHandler = (data: any) => {
+        observer.next(data);
+      };
+  
+      if(this.socket) {
+        this.socket.on('received-new-message', receivedMessageHandler);
+      }
+  
       // Define teardown logic for the observable
       return () => {
-        // This function is called when the observable is unsubscribed from
-        // Disconnect the socket to clean up resources
-        this.socket.disconnect();
+        // Unsubscribe from the event when the observable is unsubscribed
+        this.socket.off('received-new-message', receivedMessageHandler);
       };
     });
-    return observable;
   }
   
   joinChatRoom(chatId: any) {
@@ -69,5 +77,41 @@ export class SocketService {
     if(this.socket) {
       this.socket.emit('leave-chat-room', chatId);
     }
+  }
+
+  joinUserRoom(userId: any) {
+    if(this.socket) {
+      this.socket.emit('join-user-room', userId);
+    }
+  }
+
+  leaveUserRoom(userId: any) {
+    if(this.socket) {
+      this.socket.emit('leave-user-room', userId);
+    }
+  }
+
+  getchatUpdatesFromSocket(): Observable<any> {
+    return new Observable<any>((observer) => {
+      if (!this.socket) {
+        observer.error('Socket is not initialized');
+        observer.complete();
+        return;
+      }
+  
+      const chatUpdatesHandler = (data: any) => {
+        observer.next(data);
+      };
+  
+      if(this.socket) {
+        this.socket.on('chat-update', chatUpdatesHandler);
+      }
+  
+      // Define teardown logic for the observable
+      return () => {
+        // Unsubscribe from the event when the observable is unsubscribed
+        this.socket.off('chat-update', chatUpdatesHandler);
+      };
+    });
   }
 }

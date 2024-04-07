@@ -55,11 +55,15 @@ export class ChatComponent implements OnInit {
       (data: User|null) => {
         if(data) {
           this.user = data;
+          setTimeout(() => {
+            this.getchatUpdatesFromSocket();
+          })
         }
       }
     )
   }
   logout() {
+    this.socketService.leaveUserRoom(this.user?._id);
     this.authService.logout();
   }
 
@@ -306,5 +310,15 @@ export class ChatComponent implements OnInit {
   resetProfileDialog() {
     this.profileEdit = false;
     this.newName = '';
+  }
+
+  getchatUpdatesFromSocket() {
+    this.socketService.getchatUpdatesFromSocket().subscribe(
+      (response: any) => {
+        if(response) {
+          console.log('chat update => ', response);
+        }
+      }
+    )
   }
 }

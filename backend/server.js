@@ -44,24 +44,49 @@ app.use((err, req, res, next) => {
 io.use(authorizeSocketRequest);
 
 io.on('connection', (socket) => {
-  console.log('a user connected');
+  
+  socket.on('join-user-room', (userId) => {
+    console.log('user joined => ', userId);
+    socket.join(userId);
+  });
+
+  socket.on('leave-user-room', (userId) => {
+    console.log('user left => ', userId);
+    socket.leave(userId);
+  });
 
   socket.on('join-chat-room', (chatId) => {
     if(isUserExistInChat(chatId, socket.user._id)) {
-      console.log('chat room joined...', chatId);
+      console.log('chat room joined => ', chatId);
       socket.join(chatId);
     }
   });
 
   socket.on('leave-chat-room', (chatId) => {
-    console.log('chat room left...', chatId);
+    console.log('chat room left => ', chatId);
     socket.leave(chatId);
   });
 
   socket.on('new-message', async (data) => {
-    if(await isUserExistInChat(data.chatId, socket.user._id)) {
-      let savedMessageObj = await addMessageFromSocket(data.chatId, data.content, socket.user._id);
-      io.to(data.chatId).emit('recieved-new-message', savedMessageObj);
+    console.log('new message event called');
+    const chat = await isUserExistInChat(data.chatId, socket.user._id);
+    if(chat) {
+      const savedMessageObj = await addMessageFromSocket(data.chatId, data.content, socket.user._id);
+      io.to(data.chatId).emit('received-new-message', savedMessageObj);
+      
+      const updatedChatData = {
+        chatId: data.chatId,
+        content: data.content,
+        updatedAt: savedMessageObj.createdAt
+      }
+      // Notify all the participants.
+      if(chat.participants) {
+        for(let participantId of chat.participants) {
+          if(socket.user._id.toString() != participantId.toString()) {
+            io.to(participantId.toString()).emit('chat-update', updatedChatData);
+          }
+        }
+      }
     }
   });
   

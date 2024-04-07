@@ -64,7 +64,6 @@ const getMessages = asyncHandler(async (req, res, next) => {
     let pageNo = req.query.pageNo;
     let pageSize = req.query.pageSize;
     let additionalOffset = req.query.additionalOffset;
-    console.log('additionalOffset => ', additionalOffset);
     if(!chatId) {
         res.status(400).json('chatId is missing');
     }
@@ -94,7 +93,6 @@ const getMessages = asyncHandler(async (req, res, next) => {
     }
 
     const offset = ((parseInt(pageNo)-1)*parseInt(pageSize))+parseInt(additionalOffset);
-    console.log('offset => ', offset);
     const messages = await Message.find({ chatInfo: chatId })
         .sort({createdAt: -1})
         .skip(offset)

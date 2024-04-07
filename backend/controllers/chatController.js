@@ -242,9 +242,9 @@ const isUserExistInChat = asyncHandler(async (chatId, userId) => {
         { participants: { $elemMatch: { $eq: userId } } }
     ] })
     if(chat && chat.length>0) {
-        return true;
+        return chat[0];
     }
-    return false;
+    return null;
 })
 
 module.exports = { 

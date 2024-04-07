@@ -32,7 +32,6 @@ export class AppContainerComponent implements OnInit {
     if(localStorage.getItem(AUTH_TOKEN)) {
       this.getProfile();
       this.getToggleSideNav();
-      this.initializeSocket();
     }
     else {
       this.router.navigateByUrl('/auth/login');
@@ -64,6 +63,7 @@ export class AppContainerComponent implements OnInit {
     this.userService.getProfile().subscribe(
       (res: User) => {
         this.userService.setUser(res);
+        this.initializeSocket(res._id);
       },
       (error: HttpErrorResponse) => {
         this.openSnackBar(error.error, 'Ok');
@@ -77,7 +77,7 @@ export class AppContainerComponent implements OnInit {
     });
   }
 
-  initializeSocket() {
-    this.socketService.initializeSocket();
+  initializeSocket(userId: any) {
+    this.socketService.initializeSocket(userId);
   }
 }
