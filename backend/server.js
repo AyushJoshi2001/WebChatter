@@ -82,9 +82,7 @@ io.on('connection', (socket) => {
       // Notify all the participants.
       if(chat.participants) {
         for(let participantId of chat.participants) {
-          if(socket.user._id.toString() != participantId.toString()) {
-            io.to(participantId.toString()).emit('chat-update', updatedChatData);
-          }
+          io.to(participantId.toString()).emit('chat-update', updatedChatData);
         }
       }
     }

@@ -142,7 +142,11 @@ const addMessageFromSocket = asyncHandler(async (chatId, content, userId) => {
     ]);
 
     const currentTime = Date.now();
-    await Chat.findByIdAndUpdate(chatId, { latestMessage: saveMessageToDB._id, updatedAt: currentTime } );
+    await Chat.findByIdAndUpdate(chatId, { 
+        latestMessage: saveMessageToDB._id, 
+        updatedAt: currentTime,
+        seen: []
+     } );
     return saveMessageToDB;
 })
 

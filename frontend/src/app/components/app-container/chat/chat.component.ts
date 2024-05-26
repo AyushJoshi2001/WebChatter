@@ -166,8 +166,17 @@ export class ChatComponent implements OnInit {
         this.socketService.leaveChatRoom(this.selectedChat._id);
       }
       this.socketService.joinChatRoom(chat._id);
+      this.chatService.setSelectedChat(chat);
+      
+      this.chats.forEach((chat1) => {
+        if(chat1._id == chat._id) {
+          if(!this.isChatSeen(chat1, this.user?._id)) {
+            chat1.seen.push(this.user!._id);
+            this.updateChatSeenStatus(chat1._id);
+          }
+        }
+      })
     }
-    this.chatService.setSelectedChat(chat);
     if(!this.isDesktop) {
       this.appService.setToggleSideNav(false);
     }
@@ -317,8 +326,46 @@ export class ChatComponent implements OnInit {
       (response: any) => {
         if(response) {
           console.log('chat update => ', response);
+          for(let i=0; i<this.chats.length; i++) {
+            if(this.chats[i]._id === response?.chatId) {
+              let updatedChat = this.chats[i];
+              updatedChat.latestMessage.content = response?.content;
+              updatedChat.latestMessage.createdAt = response?.updatedAt;
+              updatedChat.updatedAt = response?.updatedAt;
+              if(this.selectedChat?._id != response?.chatId) {
+                updatedChat.seen = [];
+              } else {
+                this.updateChatSeenStatus(updatedChat._id);
+              }
+              if(i!=0) {
+                // move updatedChat at top
+                this.chats.splice(i,1);
+                this.chats.splice(0,0, updatedChat);
+              }
+            }
+          }
         }
       }
     )
+  }
+
+  updateChatSeenStatus(chatId: any) {
+    this.chatService.updateChatSeenStatus(chatId).subscribe(
+      (response: any) => {
+        console.log(response);
+      },
+      (error: HttpErrorResponse) => {
+        this.openSnackBar(error?.error, 'Ok');
+      }
+    )
+  }
+
+  isChatSeen(chat: any, userId: any) {
+    for(let id of chat?.seen) {
+      if(id == userId) {
+        return true;
+      }
+    }
+    return false;
   }
 }

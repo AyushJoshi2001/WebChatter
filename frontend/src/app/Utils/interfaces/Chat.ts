@@ -11,4 +11,5 @@ export interface Chat {
   groupAdmin: User;
   createdAt: Date;
   updatedAt: Date;
+  seen: string[];
 }

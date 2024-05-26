@@ -57,6 +57,7 @@ export class MessageComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    console.log("running...................")
     if(this.observer) {
       this.observer.unobserve(this.loadMore.nativeElement);
     }
@@ -87,6 +88,7 @@ export class MessageComponent implements OnInit, OnDestroy {
     )
   }
 
+  // reset all data variables when chat changes
   getSelectedChat() {
     this.chatService.getSelectedChat().subscribe(
       (data: Chat|null) => {
@@ -96,6 +98,7 @@ export class MessageComponent implements OnInit, OnDestroy {
           this.selectedChat = data;
           this.messagePageNo = 1;
           this.newMessage = '';
+          this.messageAdditionalOffset = 0;
           this.getMessage();
         }
       }

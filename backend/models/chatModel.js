@@ -34,7 +34,11 @@ const chatSchema = mongoose.Schema(
         updatedAt: {
             type: Date,
             default: () => Date.now()
-        }
+        },
+        seen: [{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User'
+        }],
 
     }
 )

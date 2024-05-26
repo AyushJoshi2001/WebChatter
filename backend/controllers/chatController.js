@@ -247,6 +247,24 @@ const isUserExistInChat = asyncHandler(async (chatId, userId) => {
     return null;
 })
 
+const updateSeenStatus = asyncHandler(async (req, res, next) => {
+    console.log('updateSeenStatus called');
+    const chatId = req.query.chatId;
+    if(!chatId) {
+        throw new Error('chatId is missing');
+    }
+    const userId = req.user._id;
+    await Chat.findOneAndUpdate({ _id: chatId, $or: [
+        { groupAdmin: userId },
+        { participants: { $elemMatch: { $eq: userId } } }
+    ] }, 
+    { 
+        $push: { seen: userId }  
+    });
+
+    res.status(200).json("Success");
+})
+
 module.exports = { 
     accessChat,
     fetchChats,
@@ -255,5 +273,6 @@ module.exports = {
     removeFromGroup,
     addToGroup,
     updateChatDetails,
-    isUserExistInChat
+    isUserExistInChat,
+    updateSeenStatus
 }

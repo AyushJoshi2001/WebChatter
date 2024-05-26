@@ -62,4 +62,10 @@ export class ChatService {
     let route = chatRoutes.REMOVE_PARTICIPANT_FROM_GROUP_CHAT;
     return this.http.put<Chat>(route, payload);
   }
+
+  updateChatSeenStatus(chatId: any): Observable<any> {
+    let route = chatRoutes.UPDATE_CHAT_SEEN_STATUS;
+    route = route.replace(':CHAT_ID', chatId);
+    return this.http.put<any>(route, "");
+  }
 }

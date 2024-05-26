@@ -71,4 +71,13 @@ export class ChatInfoComponent implements OnInit {
     let d = new Date(date).getTime();
     return d;
   }
+
+  isChatSeen(chat: any) {
+    for(let id of chat?.seen) {
+      if(id == this.userProfile?._id) {
+        return true;
+      }
+    }
+    return false;
+  }
 }

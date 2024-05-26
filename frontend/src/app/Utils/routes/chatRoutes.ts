@@ -7,5 +7,6 @@ export const chatRoutes = {
   'CREATE_GROUP_CHAT' : baseUrl + '/createGroup',
   'UPDATE_GROUP_CHAT' : baseUrl + '/update',
   'ADD_PARTICIPANT_TO_GROUP_CHAT' : baseUrl + '/add',
-  'REMOVE_PARTICIPANT_FROM_GROUP_CHAT' : baseUrl + '/remove'
+  'REMOVE_PARTICIPANT_FROM_GROUP_CHAT' : baseUrl + '/remove',
+  'UPDATE_CHAT_SEEN_STATUS' : baseUrl + '/update/seen?chatId=:CHAT_ID'
 }

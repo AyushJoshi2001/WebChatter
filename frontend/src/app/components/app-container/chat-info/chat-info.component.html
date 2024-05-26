@@ -1,5 +1,8 @@
 <div class="chat-info-container">
-  <img class="chat-img" src="{{ getChatImg() }}" alt="chat-img">
+  <div class="relative">
+    <img class="chat-img" [ngClass]="{ 'new-msg': !isChatSeen(chat) }" src="{{ getChatImg() }}" alt="chat-img">
+    <mat-icon class="mail-icon" *ngIf="!isChatSeen(chat)">mail</mat-icon>
+  </div>
   <div class="chat-info">
     <div class="chat-name-container">
       <h3 class="chat-name">{{ getChatName() }}</h3>
