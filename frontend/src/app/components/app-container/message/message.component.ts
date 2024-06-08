@@ -149,6 +149,7 @@ export class MessageComponent implements OnInit, OnDestroy {
     this.searchResults = [];
     this.searchKey = '';
     this.individualChatUser = null;
+    this.groupDetailsEdit = false;
   }
 
   editGroupDetails() {

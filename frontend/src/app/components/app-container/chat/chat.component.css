@@ -1,8 +1,7 @@
 .main-container {
   padding: 1rem;
-  background-color: #1EBBD7;
-  color: #FFFFFF;
-  min-height: 95vh;
+  background-color: #F0F8FF;
+  min-height: -webkit-fill-available;
 }
 
 .top-header {
@@ -22,12 +21,15 @@ hr {
 }
 
 .chat-list {
-  max-height: 79vh;
+  max-height: 80vh;
   overflow: auto;
   display: flex;
   flex-direction: column;
   gap: 2rem;
-  margin-top: 2rem;
+  margin-top: 1rem;
+  background-color: #FFFFFF;
+  padding: 1rem;
+  border-radius: 2rem;
 }
 
 .chat-list::-webkit-scrollbar {
@@ -45,7 +47,6 @@ hr {
   height: 1.8rem;
   width: 1.8rem;
   font-size: 1.8rem;
-  color: #FFFFFF;
 }
 
 .head {
@@ -264,12 +265,14 @@ hr {
 
 .profile-head {
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   gap: 1rem;
   padding-top: 1rem;
+  min-width: 24rem;
 }
 
 .profile-img {
+  margin: auto;
   width: 10rem;
   height: 10rem;
   border-radius: 50%;
@@ -277,7 +280,7 @@ hr {
 }
 
 .size-3 {
-  font-size: 2.5rem !important;
+  font-size: 2rem !important;
   padding: 1rem 2rem;
   margin: auto;
 }
@@ -290,7 +293,7 @@ hr {
 }
 
 .profile-email {
-  font-size: 1.4rem;
+  font-size: 1.2rem;
   font-weight: 400;
   color: rgb(158, 154, 154);
   margin: 0;
@@ -314,4 +317,5 @@ hr {
   outline: none;
   border: 1px solid gray;
   font-size: 1.2rem;
+  width: -webkit-fill-available;
 }

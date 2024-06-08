@@ -1,5 +1,6 @@
 .main-container {
   min-height: 100vh;
+  background-color: #F0F8FF;
 }
 
 .sidenav-container {
@@ -8,9 +9,8 @@
 }
 
 .sidenav {
-  min-width: 25rem;
-  border-right: 2px solid lightgray;
-  border-radius: 0 2rem 2rem 0;
+  width: 25rem;
+  border: none;
 }
 
 .fullscreen-nav{

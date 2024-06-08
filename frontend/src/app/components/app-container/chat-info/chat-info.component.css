@@ -22,11 +22,10 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  max-width: 13rem;
+  max-width: 10.5rem;
 }
 
 .chat-desc {
-  color: #FFFFFF;
   margin: 0;
   margin-top: 0.2rem;
   font-size: 0.9rem;

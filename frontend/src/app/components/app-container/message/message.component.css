@@ -3,7 +3,7 @@
   flex-direction: column;
   padding: 1rem;
   min-height: 95vh;
-  background-color: #FFFFFF;
+  background-color: #F0F8FF;
 }
 
 .head-div {
@@ -12,19 +12,20 @@
 
 .message-body {
   flex: 1;
-  max-height: 75vh;
+  max-height: 74vh;
   overflow: auto;
   display: flex;
-  background-color: #d8dbdd;
+  background-color: #FFFFFF;
   border-radius: 1rem;
+  margin-top: 1.5rem;
 }
 
 .bottom-div {
+  margin-top: 1rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border: 2px solid #1EBBD7;
-  border-radius: 10rem;
+  gap: 1rem;
 }
 
 hr {
@@ -73,11 +74,11 @@ hr {
 
 .msg-input {
   flex: 1;
-  border: none;
   outline: none;
   padding: 1rem;
   border-radius: 10rem;
   font-size: 1.1rem;
+  border: 2px solid #1EBBD7;
 }
 
 .basic-icon-button {
@@ -91,7 +92,23 @@ hr {
   height: 1.8rem;
   width: 1.8rem;
   font-size: 1.8rem;
-  color: #1EBBD7;
+  color: black;
+}
+
+.send-icon {
+  background: #1EBBD7 !important;
+  border-radius: 100%;
+  padding: 0.8rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.send {
+  color: #FFFFFF;
+  height: 1.8rem;
+  width: 1.8rem;
+  font-size: 1.8rem;
 }
 
 .no-text {
@@ -107,16 +124,19 @@ hr {
   align-items: center;
   min-height: 95vh;
   flex-direction: column;
+  background-color: #F0F8FF;
 }
 
 .profile-head {
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   gap: 1rem;
   padding-top: 1rem;
+  min-width: 24rem;
 }
 
 .profile-img {
+  margin: auto;
   width: 10rem;
   height: 10rem;
   border-radius: 50%;
@@ -124,20 +144,20 @@ hr {
 }
 
 .size-3 {
-  font-size: 2.5rem !important;
+  font-size: 2rem !important;
   padding: 1rem 2rem;
   margin: auto;
 }
 
 .profile-name {
-  font-size: 2.5rem;
+  font-size: 2rem !important;
   margin: 0;
   font-weight: 800;
   line-height: 1.2;
 }
 
 .profile-email {
-  font-size: 1.4rem;
+  font-size: 1.2rem;
   font-weight: 400;
   color: rgb(158, 154, 154);
   margin: 0;
@@ -161,6 +181,7 @@ hr {
   outline: none;
   border: 1px solid gray;
   font-size: 1.2rem;
+  width: -webkit-fill-available;
 }
 
 .close-btn {
@@ -391,20 +412,21 @@ hr {
 
 .left-align {
   float: left;
-  background-color: #FFFFFF;
+  background-color: #ededed;
+  border-radius: 0 1rem 1rem 1rem;
   color: #242323;
 }
 
 .right-align {
   float: right;
   background-color: #1EBBD7;
+  border-radius: 1rem 0 1rem 1rem;
   color: #FFFFFF;
 }
 
 .message-content {
   margin-top: 1rem;
-  border-radius: 1rem;
-  padding: 1rem;
+  padding: 1rem 1rem 0rem 0.5rem;
   max-width: 50%;
   word-wrap: break-word;
 }
@@ -431,6 +453,26 @@ hr {
 
 #loadMore {
   visibility: hidden;
+}
+
+.font-sm {
+  font-size: 0.9rem;
+}
+
+.sender-pic {
+  height: 2rem;
+  width: 2rem;
+  border-radius: 100%;
+}
+
+.sender-details {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.msg-content {
+  margin-top: 0.5rem;
 }
 
 @media only screen and (max-width: 800px) {

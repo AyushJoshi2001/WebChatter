@@ -28,7 +28,6 @@
       </mat-menu>
     </div>
   </div>
-  <hr>
 
   <div class="chat-list">
     <app-chat-info class="chat-info" [chat]="chat" *ngFor="let chat of chats" (click)="selectChat(chat)" [ngClass]="{'bg-blue' : selectedChat?._id===chat._id}"></app-chat-info>
@@ -105,7 +104,7 @@
 </ng-template>
 
 <ng-template #show_profile>
-  <h2 mat-dialog-title class="size-3">My Profile</h2>
+  <h2 mat-dialog-title class="size-3">Profile</h2>
   <mat-dialog-content>
     <div class="profile-head">
       <img class="profile-img" src="{{ user?.profileImg }}" alt="profile-img">
