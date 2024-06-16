@@ -147,7 +147,8 @@ export class ChatComponent implements OnInit {
         this.chatService.setAllChats(response);
       },
       (error: HttpErrorResponse) => {
-        this.openSnackBar(error?.error, 'Ok');
+        console.log(error?.error);
+        // this.openSnackBar(error?.error, 'Ok');
       }
     )
   }
