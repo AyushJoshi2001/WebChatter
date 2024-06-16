@@ -66,7 +66,8 @@ export class AppContainerComponent implements OnInit {
         this.initializeSocket(res._id);
       },
       (error: HttpErrorResponse) => {
-        this.openSnackBar(error.error, 'Ok');
+        console.log(error?.error);
+        // this.openSnackBar(error.error, 'Ok');
       }
     )
   }
